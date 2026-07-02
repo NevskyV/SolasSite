@@ -322,11 +322,12 @@
 
 .markdown-body code {
   font-family: var(--font-mono);
-  font-size: 0.875rem;
-  background: rgba(208, 188, 255, 0.12);
-  padding: 0.2rem 0.4rem;
-  border-radius: 6px;
+  font-size: 0.8rem;
+  background: rgba(208, 188, 255, 0.1);
+  padding: 0.08rem 0.25rem;
+  border-radius: 4px;
   color: #ffd8e4;
+  border: 1px solid rgba(208, 188, 255, 0.08);
 }
 
 .markdown-body pre code {
