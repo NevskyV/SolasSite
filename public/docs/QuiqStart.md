@@ -11,12 +11,10 @@ dotnet --version
   # Ожидаемый вывод: 10.x.x+
 ```
 Solas использует возможности .NET 10 (Primary Constructors, новые API параллелизма и др.). Более ранние версии SDK не гарантируют стабильную работу.
-Создайте новый консольный проект через консоль или своё IDE и добавьте NuGet-пакет движка:
+Создайте новое решение через консоль или своё IDE:
 
 ```bash
-dotnet new console -n MyGame
-cd MyGame
-dotnet add package Solas
+dotnet new MyGame
 ```
 
 # Проект
