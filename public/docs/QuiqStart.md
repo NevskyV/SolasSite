@@ -24,7 +24,7 @@ dotnet new MyGame
 > https://github.com/NevskyV/SolasGameTemplate
 ## Самостоятельная настройка
 ### Проект
-Откройте файл с расширением csproj.
+Создайте консольный проект и откройте файл с расширением csproj.
 В `PropertyGroup` необходимо указать свойство 
 
 ```C#
