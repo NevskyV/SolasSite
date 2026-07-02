@@ -116,7 +116,7 @@ export default function App() {
                   <div className="flex items-center gap-2.5">
                     <div className="relative w-9 h-9 flex items-center justify-center rounded-xl group-hover:bg-m3-primary/20 transition-all duration-300">
                       <img 
-                        src="/logo_icon.svg" 
+                        src={`${import.meta.env.BASE_URL}logo_icon.svg`} 
                         className="w-full h-full object-contain select-none" 
                         referrerPolicy="no-referrer"
                       />

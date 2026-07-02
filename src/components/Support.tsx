@@ -56,7 +56,7 @@ export default function Support() {
               <div className="bg-white p-4 rounded-2xl shadow-inner mb-4 w-44 h-44 flex items-center justify-center relative overflow-hidden">
                 {!qrError ? (
                   <img 
-                    src="/qr.png" 
+                    src={`${import.meta.env.BASE_URL}qr.png`} 
                     alt="Донат QR" 
                     onError={() => setQrError(true)} 
                     className="w-full h-full object-contain select-none" 
@@ -220,7 +220,7 @@ export default function Support() {
               <div className="relative z-10 text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                 {!tgError ? (
                   <img 
-                    src="/telegram.png" 
+                    src={`${import.meta.env.BASE_URL}telegram.png`} 
                     alt="Telegram" 
                     onError={() => setTgError(true)} 
                     className="w-8 h-8 object-contain select-none" 

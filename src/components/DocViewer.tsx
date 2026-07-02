@@ -82,7 +82,7 @@ export default function DocViewer() {
 
   // Load documentation structural folders (index.json)
   useEffect(() => {
-    fetch('/docs/index.json')
+    fetch(`${import.meta.env.BASE_URL}docs/index.json`)
       .then(res => {
         if (!res.ok) throw new Error('Offline mode or missing public directory index.json');
         return res.json();
@@ -102,7 +102,7 @@ export default function DocViewer() {
     if (docPanel) docPanel.scrollTop = 0;
 
     // Load from public directory with direct fallback
-    fetch(`/docs/${selectedPageId}.md`)
+    fetch(`${import.meta.env.BASE_URL}/docs/${selectedPageId}.md`)
       .then(res => {
         if (!res.ok) throw new Error('Network file failed, fallback to offline embedded documentation');
         return res.text();
