@@ -31,7 +31,7 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
         >
           <div className="relative w-9 h-9 flex items-center justify-center rounded-xl group-hover:bg-m3-primary/20 transition-all duration-300">
             <img 
-              src="/logo_icon.svg" 
+              src=$"{import.meta.env.BASE_URL}logo_icon.svg" 
               className="w-full h-full object-contain select-none" 
               referrerPolicy="no-referrer"
             />
