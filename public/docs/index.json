@@ -1,0 +1,28 @@
+[
+  {
+    "category": "Введение",
+    "icon": "Compass",
+    "pages": [
+      {
+        "id": "Introduction",
+        "title": "Основная концепция",
+        "path": "/docs/Introduction.md"
+      },
+	{
+        "id": "QuiqStart",
+        "title": "Быстрый старт",
+        "path": "/docs/QuiqStart.md"
+      },
+	{
+        "id": "EDL",
+        "title": "EDL",
+        "path": "/docs/EDL.md"
+      },
+	{
+        "id": "Build",
+        "title": "Сборка",
+        "path": "/docs/Build.md"
+      }
+    ]
+  }
+]

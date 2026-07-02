@@ -1,0 +1,6 @@
+{
+  "name": "Orbitality",
+  "description": "Creative landing page and expressive documentation for Orbitality, a next-gen data-oriented (EDL) C# game engine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
