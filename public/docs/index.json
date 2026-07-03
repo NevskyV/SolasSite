@@ -19,6 +19,26 @@
         "path": "/docs/EDL.md"
       },
 	{
+        "id": "Spaces",
+        "title": "Пространства",
+        "path": "/docs/Spaces.md"
+      },
+	{
+        "id": "UpdateCycle",
+        "title": "Цикл Update",
+        "path": "/docs/UpdateCycle.md"
+      },
+	{
+        "id": "Query",
+        "title": "Query",
+        "path": "/docs/Query.md"
+      },
+	{
+        "id": "Command",
+        "title": "Command",
+        "path": "/docs/Command.md"
+      },
+	{
         "id": "Build",
         "title": "Сборка",
         "path": "/docs/Build.md"
