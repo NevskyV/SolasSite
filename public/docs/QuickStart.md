@@ -14,6 +14,7 @@ Solas использует возможности .NET 10 (Primary Constructors,
 Создайте новое решение через консоль или своё IDE:
 
 ```bash
+dotnet new install Solas.Templates.Console
 dotnet new sln --name MyGame
 ```
 
