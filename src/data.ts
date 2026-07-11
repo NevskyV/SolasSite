@@ -48,7 +48,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
   {
     id: 'transform',
     title: 'Transform',
-    status: 'in-progress',
+    status: 'completed',
     description: 'Пространства GUID-папок, вычисление иерархий без тяжелой связи в ОЗУ, 3D трансформации.',
     tags: ['GUID Hierarchy', 'SIMD', '3D Math']
   },

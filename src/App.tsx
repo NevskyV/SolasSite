@@ -23,6 +23,28 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'landing' | 'docs'>('landing');
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [engineVersion, setEngineVersion] = useState('0.1.0');
+
+  useEffect(() => {
+    let active = true;
+    fetch('https://api.nuget.org/v3-flatcontainer/solas/index.json')
+      .then((res) => {
+        if (!res.ok) throw new Error('NuGet flat container API error');
+        return res.json();
+      })
+      .then((data) => {
+        if (active && data && Array.isArray(data.versions) && data.versions.length > 0) {
+          const latest = data.versions[data.versions.length - 1];
+          if (latest) {
+            setEngineVersion(latest);
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not retrieve latest version from NuGet. Fallback version used:', err);
+      });
+    return () => { active = false; };
+  }, []);
 
   // Initialize dynamic Accent Color theme palette on load
   useEffect(() => {
@@ -39,20 +61,6 @@ export default function App() {
   const handleDownloadTrigger = () => {
     setShowDownloadModal(true);
     setDownloadSuccess(false);
-  };
-
-  const handleConfirmDownload = () => {
-    setDownloadSuccess(true);
-    setTimeout(() => {
-      // Simulate static zip generation and download
-      const link = document.createElement('a');
-      link.href = '#';
-      link.setAttribute('download', 'Orbitality_C#_Engine_SDK_v0.1.zip');
-      document.body.appendChild(link);
-      // Let the user know the code is perfectly executing
-      console.log('Initiated mock C# engine download archive.');
-      document.body.removeChild(link);
-    }, 1000);
   };
 
   return (
@@ -83,6 +91,7 @@ export default function App() {
               <Hero 
                 onDocsClick={() => setActiveTab('docs')} 
                 onDownloadClick={handleDownloadTrigger} 
+                engineVersion={engineVersion}
               />
 
               <WavyStripes opacity={0.45} color="rgba(208, 188, 255, 0.3)" speed={10} className="-my-10 z-0" />
@@ -189,12 +198,12 @@ export default function App() {
 
                 {/* Header */}
                 <h3 className="font-display font-bold text-xl text-white mb-2">
-                  'Установка Solas'
+                  Установка Solas
                 </h3>
 
                 {/* Subtitle description */}
                 <p className="text-xs text-[#cac4d0] leading-relaxed mb-6 max-w-xs">
-                  'Последняя версия Solas – 0.1.0! Она включает в себя три пакета: Core, SourceGenerators, Build'
+                  Последняя версия Solas – {engineVersion}!
                 </p>
 
                 {/* Bullet attributes */}
@@ -202,7 +211,7 @@ export default function App() {
                   <div className="w-full space-y-2 mb-6 text-left bg-black/40 p-4 rounded-xl border border-white/5 font-mono text-[11px]">
                     <div className="flex justify-between">
                       <span className="text-slate-400">Версия:</span>
-                      <span className="text-m3-primary font-bold">0.1.0 Alpha</span>
+                      <span className="text-m3-primary font-bold">{engineVersion} Alpha</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400">Требование:</span>

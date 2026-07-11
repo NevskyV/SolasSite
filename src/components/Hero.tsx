@@ -12,9 +12,10 @@ import GameButton from './GameButton';
 interface HeroProps {
   onDocsClick: () => void;
   onDownloadClick: () => void;
+  engineVersion: string;
 }
 
-export default function Hero({ onDocsClick, onDownloadClick }: HeroProps) {
+export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: HeroProps) {
   return (
     <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-32 flex flex-col items-center text-center px-4">
       {/* Background radial glow */}
@@ -56,7 +57,7 @@ export default function Hero({ onDocsClick, onDownloadClick }: HeroProps) {
           className="w-full sm:w-auto px-8 py-4 text-base"
         >
           <Download className="w-5 h-5" />
-          Установить SDK v0.1.0
+          Установить v{engineVersion}
         </GameButton>
 
         <GameButton

@@ -19,17 +19,17 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
       initial={{ opacity: 0, y: -25 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, type: 'spring', stiffness: 200, damping: 24 }}
-      className="sticky top-4 z-20 w-full max-w-7xl mx-auto px-4"
+      className="sticky top-2 sm:top-4 z-20 w-full max-w-7xl mx-auto px-2 sm:px-4"
     >
-      <div className="w-full px-4 py-3 md:px-8 m3-glass rounded-3xl shadow-2xl flex items-center justify-between">
+      <div className="w-full px-3 py-2 sm:px-6 sm:py-3 md:px-8 m3-glass rounded-2xl sm:rounded-3xl shadow-2xl flex items-center justify-between gap-2">
         
         {/* Logo */}
         <div 
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-2 sm:gap-3 cursor-pointer group"
           onClick={() => setActiveTab('landing')}
           id="orbitality-logo-container"
         >
-          <div className="relative w-9 h-9 flex items-center justify-center rounded-xl group-hover:bg-m3-primary/20 transition-all duration-300">
+          <div className="relative w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg sm:rounded-xl group-hover:bg-m3-primary/20 transition-all duration-300">
             <img 
               src={`${import.meta.env.BASE_URL}logo_icon.svg`}
               className="w-full h-full object-contain select-none" 
@@ -37,7 +37,7 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-display font-bold text-xl tracking-tight text-white group-hover:text-m3-primary transition-colors animate-pulse">
+            <span className="font-display font-bold text-base sm:text-xl tracking-tight text-white group-hover:text-m3-primary transition-colors">
               Solas
             </span>
             <span className="text-[10px] font-mono text-m3-tertiary tracking-wider uppercase -mt-1 hidden sm:block">
@@ -47,11 +47,11 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
         </div>
 
         {/* Dynamic Material Navigation */}
-        <nav className="flex items-center gap-1.5 p-1 bg-[#1c1a22]/80 backdrop-blur-md rounded-full border border-white/5">
+        <nav className="flex items-center gap-0.5 sm:gap-1.5 p-0.5 sm:p-1 bg-[#1c1a22]/80 backdrop-blur-md rounded-full border border-white/5">
           <button
             id="nav-tab-landing"
             onClick={() => setActiveTab('landing')}
-            className={`relative px-4 py-1.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${
+            className={`relative px-2.5 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium tracking-wide transition-all duration-300 ${
               activeTab === 'landing' 
                 ? 'text-m3-onPrimaryContainer font-semibold' 
                 : 'text-[#cac4d0] hover:text-white hover:bg-white/5'
@@ -64,8 +64,8 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               />
             )}
-            <span className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4" />
+            <span className="flex items-center gap-1 sm:gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               О движке
             </span>
           </button>
@@ -73,7 +73,7 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
           <button
             id="nav-tab-docs"
             onClick={() => setActiveTab('docs')}
-            className={`relative px-4 py-1.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${
+            className={`relative px-2.5 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium tracking-wide transition-all duration-300 ${
               activeTab === 'docs' 
                 ? 'text-m3-onPrimaryContainer font-semibold' 
                 : 'text-[#cac4d0] hover:text-white hover:bg-white/5'
@@ -86,8 +86,8 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               />
             )}
-            <span className="flex items-center gap-1.5">
-              <BookOpen className="w-4 h-4" />
+            <span className="flex items-center gap-1 sm:gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               Документация
             </span>
           </button>

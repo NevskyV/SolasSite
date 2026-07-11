@@ -248,11 +248,6 @@ export default function Roadmap() {
                         >
                           {/* Little indicator anchor pointer */}
                           <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#1d1b20] border-r border-b border-m3-primary/15 rotate-45" />
-
-                          <div className="flex items-center gap-1.5 mb-1 text-[10px] font-mono font-bold uppercase text-m3-primary">
-                            <Sparkles className="w-3.5 h-3.5" />
-                            <span>Описание Модуля</span>
-                          </div>
                           
                           <h4 className="font-display font-bold text-sm text-white mb-1.5">
                             {module.title}
