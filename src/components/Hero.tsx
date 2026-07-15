@@ -40,7 +40,7 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
         transition={{ duration: 0.8, delay: 0.2 }}
         className="mt-6 text-sm md:text-lg text-[#cac4d0] max-w-2xl leading-relaxed"
       >
-        <span className="font-semibold text-white">Solas</span> — легковесный C# движок для инди-разработчиков. Используя простую Data-Oriented архитектуру Entity-Data-Logic (EDL) и Source Generators, он разгружает процессор и избавляет от лишнего бойлерплейта.
+        <span className="font-semibold text-white">Solas</span> — высокопроизводительный C# движок, главным приоритетом которого является максимально простой опыт разработки. Используя свою простую Data-Oriented архитектуру Entity-Data-Logic и Source Generators, он разгружает процессор и избавляет от лишнего бойлерплейта.
       </motion.p>
 
       {/* Expressive Action Call buttons (Concept 1.2) */}

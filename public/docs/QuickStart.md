@@ -96,7 +96,5 @@ dotnet new sls-console -o MyGame
    `Engine.CreateUpdateSystems();`
 6. Создаём мир игры
    `Engine.CreateWorld();`
-7. Регистрируем все обновляемые типы (Api может поменяться)
-   `GeneratedUpdateRegistration.RegisterAll();`
-8. И, наконец, запускаем двигатель!
+7. И, наконец, запускаем двигатель!
    `Engine.State = GameState.Start;`

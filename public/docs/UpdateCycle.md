@@ -67,7 +67,7 @@ public partial class ParticleLogic : Logic
 public interface IUpdateSystem
 {
     UpdateType UpdateType { get; }
-    void Update();
+    void Update(Space space);
 }
 ```
 
@@ -81,24 +81,21 @@ public enum UpdateType
     LateUpdate    // After Update, for post-processing
 }
 ```
-### Пример: IUpdateSystem для рендера
+### Пример: IUpdateSystem для обработки компонентов в пространстве с какими-то данными
 
 ```csharp
-public class RenderSystem : IUpdateSystem
+public class ProcessSystem : IUpdateSystem
 {
     // Runs each frame after Update
     public UpdateType UpdateType => UpdateType.LateUpdate;
 
-    public void Update()
+    public void Update(Space space)
     {
-        var space = WorldContext.GlobalSpace;
-
-        // Collect all objects with visual data and render them
-        foreach (var entity in Query.GetEntitiesInAvailable(space))
+        foreach (var entity in Query.GetEntitiesByType<SomeData>(space))
         {
             if (!entity.IsEnabled.Value) continue;
 
-            // ... render logic
+            // ... do processing
         }
     }
 }
