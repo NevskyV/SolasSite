@@ -56,8 +56,8 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
     id: 'render',
     title: 'Render',
     status: 'in-progress',
-    description: 'Оптимизированный рендеринг батчей, pixel-perfect, RT, кроссплатформенный шейдеринг Vulkan/DX12.',
-    tags: ['Vulkan', 'DirectX 12', 'Batching']
+    description: 'Оптимизированный рендеринг батчей, pixel-perfect, RT, кроссплатформенный шейдеринг Vulkan.',
+    tags: ['Vulkan', 'Ray Tracing', 'Batching']
   },
   {
     id: 'editor',
@@ -70,7 +70,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
     id: 'physics',
     title: 'Physics',
     status: 'planned',
-    description: 'Гравитация, стабильный FixedUpdate цикл, коллайдеры, твёрдые и жидкие тела.',
+    description: 'Настраиваемая гравитация, коллайдеры, твёрдые и жидкие тела.',
     tags: ['FixedUpdate', 'Colliders']
   },
   {
