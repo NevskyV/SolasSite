@@ -39,6 +39,16 @@
         "path": "/docs/Command.md"
       },
 	{
+        "id": "Serialization",
+        "title": "Serialization",
+        "path": "/docs/Serialization.md"
+      },
+	{
+        "id": "Assets",
+        "title": "Assets",
+        "path": "/docs/Assets.md"
+      },
+	{
         "id": "Build",
         "title": "Сборка",
         "path": "/docs/Build.md"

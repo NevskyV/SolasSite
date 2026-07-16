@@ -1,5 +1,5 @@
 # Command
-`Command` – статический класс, позволяющий отдавать команды ядру движка.
+Взаимодействие вашего кода с миром может осуществляться с помощью команд. В Solas `Command` – статический класс, позволяющий отдавать команды ядру движка. В коде функции разделены по регионам, в документации же отделены заголовками.
 ## Settings System  
 ```
 WriteExistingSettings(IData settings)  
@@ -8,7 +8,7 @@ WriteNewSettings(IData settings, string path)
 ## DI System  
 ```
 public static T AutoInject<T>(Space space) where T : Logic  
-public static T Inject<T>(Guid id, Guid spaceId) where T : class, IReferenceable  
+public static T Inject<T>(Guid id, Guid spaceId) where T : class, IReferenceable 
 ```
 ## Assets Pool  
 ```

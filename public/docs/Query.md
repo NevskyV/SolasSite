@@ -1,5 +1,5 @@
 # Query
-`Query` – статический класс, позволяющий получать данные из мира. 
+Получение каких-либо данных из мира реализовано с помощью статического класса `Query`. В коде функции разделены по регионам, в документации же отделены заголовками.
 ## Serializer
 Возвращает текущий сериализатор движка.
 ## Settings System
@@ -10,7 +10,8 @@ public static T GetSettings<T>() where T : class, IData
 ```
 public static T GetAsset<T>(Guid id) where T : Asset, new()  
 public static Asset GetLoadedAsset(Guid id)  
-public static Asset GetUnknownAsset(FileStream stream)  
+public static Asset GetUnknownAsset(FileStream stream)
+public static Entity LoadPrefab(Guid guid)
 ```
 ## Space Pool  
 ```
@@ -18,7 +19,7 @@ public static SpaceFolder GetSpaceFolderWith(Guid guid, Space space)
 public static SpaceFolder GetSpaceFolderWith(Guid guid, Guid spaceId)  
 public static IEnumerable<SpaceFolder> GetSpaceFoldersWith(List<Guid> guids, Space space) public static List<SpaceFolder> GetAllSpaceFoldersIn(Space space)  
 public static Space GetSpace(Guid guid)  
-public static string[] GetPaths()  //возвращает все пути до локальных пространств
+public static string[] GetLocalSpacesPaths()
 ```
 ## Entity Pool  
 ```
