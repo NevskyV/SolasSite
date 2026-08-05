@@ -73,18 +73,18 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
       </motion.div>
 
       {/* Solve core problems Section Cards - Material 3 Expressive Bento Layout */}
-      <div className="mt-16 w-full max-w-6xl text-left grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mt-16 w-full max-w-6xl text-left grid grid-cols-1 md:grid-cols-5 gap-6">
         
         {/* Card 1: Featured DX Card (Spans 2 columns on desktop) */}
         <GameCard
           id="hero-core-card-1"
           accent="primary"
-          className="md:col-span-2 flex flex-col justify-between p-8"
+          className="md:col-span-3 flex flex-col justify-between p-6"
         >
           <div className="flex flex-col justify-between h-full">
             <div>
               <div className="flex items-center justify-between gap-4 mb-6">
-                <div className="w-14 h-14 bg-m3-primaryContainer/60 rounded-2xl flex items-center justify-center text-m3-primary shadow-xl shadow-m3-primary/10 border border-m3-primary/20">
+                <div className="w-14 h-14 bg-m3-primaryContainer/60 rounded-2xl flex items-center justify-center text-m3-primary shadow-xl shadow-m3-primary/10">
                   <Cpu className="w-7 h-7" />
                 </div>
               </div>
@@ -99,7 +99,7 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
 
             <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap items-center gap-3 text-xs font-mono text-[#cac4d0]">
               <span className="px-3 py-1 rounded-lg bg-black/40 border border-white/10 flex items-center gap-1.5 text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Source Generators
+                Source Generators
               </span>
               <span className="px-3 py-1 rounded-lg bg-black/40 border border-white/10 text-m3-primary">
                 Auto-DI Container
@@ -115,22 +115,22 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
         <GameCard
           id="hero-core-card-2"
           accent="tertiary"
-          className="md:col-span-1 flex flex-col justify-between p-6"
+          className="md:col-span-2 flex flex-col justify-between p-6"
         >
           <div className="flex flex-col h-full justify-between">
             <div>
-              <div className="w-12 h-12 bg-m3-tertiaryContainer/50 rounded-2xl flex items-center justify-center text-m3-tertiary mb-5 shadow-lg shadow-black/20">
-                <Shield className="w-6 h-6" />
+              <div className="w-14 h-14 bg-m3-tertiaryContainer/60 rounded-2xl flex items-center justify-center text-m3-tertiary mb-5 shadow-xl shadow-m3-tertiary/10">
+                <Shield className="w-7 h-7" />
               </div>
-              <h3 className="font-display font-bold text-xl text-white mb-2">
+              <h3 className="font-display font-bold text-2xl sm:text-3xl text-white mb-3">
                 Простые слияния в Git
               </h3>
-              <p className="text-xs text-[#cac4d0] leading-relaxed">
+              <p className="text-sm text-[#cac4d0] leading-relaxed">
                 Вместо огромных и нечитаемых сцен в формате YAML, Solas хранит данные в максимально компактном виде, сохраняя то, что вам нужно. Вы можете выбрать заготовленные сериализаторы или даже написать свой!
               </p>
             </div>
-            <div className="mt-6 flex">
-              <span className="text-[10px] font-mono text-m3-tertiary font-bold bg-m3-tertiaryContainer/30 border border-m3-tertiary/20 px-2.5 py-1 rounded-lg">
+            <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap items-center gap-3 text-xs font-mono text-[#cac4d0]">
+              <span className="px-3 py-1 rounded-lg bg-black/40 border border-white/10 flex items-center gap-1.5 text-emerald-400">
                 EASY SCENE MERGING
               </span>
             </div>
@@ -141,10 +141,10 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
         <GameCard
           id="hero-core-card-3"
           accent="secondary"
-          className="md:col-span-3 flex flex-col md:flex-row items-center justify-between gap-6 p-8"
+          className="md:col-span-5 flex flex-col md:flex-row items-center justify-between gap-6 p-8"
         >
           <div className="flex items-start gap-5">
-            <div className="w-14 h-14 bg-m3-secondaryContainer/50 rounded-2xl flex items-center justify-center text-m3-secondary shrink-0 shadow-lg shadow-black/20">
+            <div className="w-14 h-14 bg-m3-secondaryContainer/50 rounded-2xl flex items-center justify-center text-m3-secondary shrink-0 shadow-xl shadow-m3-secondary/10">
               <RefreshCw className="w-7 h-7" />
             </div>
             <div>
