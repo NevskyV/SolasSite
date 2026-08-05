@@ -189,7 +189,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
       />
 
       {/* Assembly corner brackets matching panel curvature */}
-      <div className="absolute inset-0 pointer-events-none z-20">
+      <div className="absolute inset-0 pointer-events-none z-1">
         {/* Top-Left Bracket */}
         <span
           className={`absolute w-4 h-4 border-t-3 border-l-3 rounded-tl-md ${colors.bracket} transition-all duration-300 ease-out`}
