@@ -221,7 +221,7 @@ public partial class TextLogic : Logic, IInitializable
           <h2 className="font-display font-bold text-2xl md:text-4xl text-white mt-4 tracking-tight">
             Генерация кода при компиляции
           </h2>
-          <p className="mt-4 text-sm text-[#cac4d0] max-w-2xl mx-auto">
+          <p className="mt-4 text-m text-[#cac4d0] max-w-2xl mx-auto">
             Solas использует <strong>C# Source Generators</strong> для исключения рефлексии в рантайме. Вспомогательный код, циклы обновления и сериализаторы генерируются в момент сборки, не расходуя ресурсы процессора во время игры.
           </p>
         </div>
@@ -381,7 +381,7 @@ public partial class TextLogic : Logic, IInitializable
                     </span>
                     <span className="text-m3-primary font-bold">исходный код разработчика</span>
                   </div>
-                  <pre className="p-4 overflow-x-auto text-[11px] font-mono leading-relaxed text-[#eae8ed] max-h-[180px] overflow-y-auto scrollbox">
+                  <pre className="p-4 overflow-x-auto text-[11px] font-mono leading-relaxed text-[#eae8ed] max-h-[180px] overflow-y-auto scrollbox min-h-[215px]">
                     <code>{activeFeature.sourceCode}</code>
                   </pre>
                 </div>
@@ -395,7 +395,7 @@ public partial class TextLogic : Logic, IInitializable
                     </span>
                     <span className="text-emerald-400 font-bold">сгенерированный код (0ms)</span>
                   </div>
-                  <pre className="p-4 overflow-x-auto text-[11px] font-mono leading-relaxed text-m3-onPrimaryContainer max-h-[220px] overflow-y-auto scrollbox opacity-95">
+                  <pre className="p-4 overflow-x-auto text-[11px] font-mono leading-relaxed text-m3-onPrimaryContainer max-h-[220px] overflow-y-auto scrollbox opacity-95 min-h-[450px]">
                     <code>{activeFeature.generatedCode}</code>
                   </pre>
                 </div>

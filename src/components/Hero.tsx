@@ -19,7 +19,7 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
   const [activePipelineStage, setActivePipelineStage] = useState<'entity' | 'data' | 'logic' | 'gen'>('data');
 
   return (
-    <section className="relative overflow-hidden pt-8 pb-20 md:pt-16 md:pb-28 flex flex-col items-center text-center px-4">
+    <section className="relative overflow-hidden pt-8 pb-20 md:pt-50 md:pb-28 flex flex-col items-center text-center px-4">
       {/* Background radial ambient glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] md:w-[750px] h-[380px] md:h-[750px] bg-m3-primary/10 rounded-full blur-[110px] -z-10 pointer-events-none" />
       <div className="absolute top-1/3 left-1/3 w-[220px] md:w-[450px] h-[220px] md:h-[450px] bg-m3-tertiary/10 rounded-full blur-[130px] -z-10 pointer-events-none" />
@@ -49,7 +49,7 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        className="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center"
+        className="mt-18 flex flex-col sm:flex-row items-center gap-4 justify-center"
       >
         <GameButton
           id="hero-download-btn-xl"
@@ -73,7 +73,7 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
       </motion.div>
 
       {/* Solve core problems Section Cards - Material 3 Expressive Bento Layout */}
-      <div className="mt-16 w-full max-w-6xl text-left grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="mt-60 w-full max-w-6xl text-left grid grid-cols-1 md:grid-cols-5 gap-6">
         
         {/* Card 1: Featured DX Card (Spans 2 columns on desktop) */}
         <GameCard
@@ -92,7 +92,7 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
               <h3 className="font-display font-bold text-2xl sm:text-3xl text-white mb-3">
                 Удобство разработки (DX)
               </h3>
-              <p className="text-sm text-[#cac4d0] leading-relaxed max-w-2xl">
+              <p className="text-m text-[#cac4d0] leading-relaxed max-w-2xl">
                 Реактивные структуры и классы данных, автоматическое внедрение зависимостей, встроенная многопоточность и эффективное получение объектов по компонентам – всё, чтобы разработчикам было максимально комфортно создавать геймплей.
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
               <h3 className="font-display font-bold text-2xl sm:text-3xl text-white mb-3">
                 Простые слияния в Git
               </h3>
-              <p className="text-sm text-[#cac4d0] leading-relaxed">
+              <p className="text-m text-[#cac4d0] leading-relaxed">
                 Вместо огромных и нечитаемых сцен в формате YAML, Solas хранит данные в максимально компактном виде, сохраняя то, что вам нужно. Вы можете выбрать заготовленные сериализаторы или даже написать свой!
               </p>
             </div>
@@ -148,12 +148,12 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
               <RefreshCw className="w-7 h-7" />
             </div>
             <div>
-              <div className="flex items-center gap-3 mb-1">
-                <h3 className="font-display font-bold text-xl md:text-2xl text-white">
+              <div className="flex items-center gap-3 mb-3">
+                <h3 className="font-display font-bold text-xl md:text-3xl text-white">
                   Разделение данных и логики
                 </h3>
               </div>
-              <p className="text-xs md:text-sm text-[#cac4d0] leading-relaxed max-w-3xl">
+              <p className="text-m md:text-m text-[#cac4d0] leading-relaxed max-w-3xl">
                 Solas использует современный Data-Oriented подход, разделяя данные и логику. Данные могут быть представлены в виде лёгких структур или ссылаемых классов. Логика наследуется от абстрактного класса, а сущность является контейнером.
               </p>
             </div>

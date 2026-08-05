@@ -263,7 +263,7 @@ export default function App() {
 
                 {/* Subtitle description */}
                 <p className="text-xs text-[#cac4d0] leading-relaxed mb-6 max-w-xs">
-                  Последняя версия Solas – {engineVersion}! Она включает в себя три пакета: Core, SourceGenerators, Build
+                  Последняя версия Solas – {engineVersion}! Она включает в себя 3 пакета: SourceGenerators, Core, Transform
                 </p>
 
                 {/* Bullet attributes */}

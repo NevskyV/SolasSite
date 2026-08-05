@@ -78,7 +78,7 @@ export default function SpaceHierarchy() {
           <h2 className="font-display font-bold text-2xl md:text-4xl text-white mt-4 tracking-tight">
             Изоляция локаций и зависимости
           </h2>
-          <p className="mt-4 text-sm text-[#cac4d0] max-w-xl mx-auto">
+          <p className="mt-4 text-m text-[#cac4d0] max-w-xl mx-auto">
             Посмотрите, как движок изолирует игровые пространства в памяти и разрешает зависимости компонентов без лишней связанности.
           </p>
         </div>
@@ -134,7 +134,7 @@ export default function SpaceHierarchy() {
           {activeTab === 'spaces' ? (
             <>
               {/* Space Map Panel (Interactive Card) - col-span-7 */}
-              <GameCard id="space-isolation-card" accent="tertiary" className="lg:col-span-7 flex flex-col justify-between">
+              <GameCard id="space-isolation-card" accent="tertiary" className="lg:col-span-7 min-h-[720px] flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-center mb-6">
                     <span className="text-xs font-mono font-bold text-m3-tertiary">
@@ -369,7 +369,7 @@ export default function SpaceHierarchy() {
                   </div>
                 </div>
 
-                <div className="bg-m3-tertiaryContainer/20 p-4 rounded-2xl border border-m3-tertiary/25 text-xs text-m3-onTertiaryContainer flex gap-3 mt-6">
+                <div className="bg-m3-tertiaryContainer/20 p-4 rounded-2xl border-2 border-m3-tertiary/25 text-xs text-m3-onTertiaryContainer flex gap-3 mt-6">
                   <p>
                     <strong>Аналогия доступа:</strong> Global Space функционирует как <code>public</code>, в то время как Local Space действует как <code>protected</code> в вертикали вашей иерархии!
                   </p>
@@ -506,7 +506,7 @@ export default function SpaceHierarchy() {
                   </div>
                 </div>
 
-                <div className="bg-blue-950/20 border border-blue-500/20 p-4 rounded-2xl text-xs text-[#93c5fd] flex gap-3 mt-6">
+                <div className="bg-blue-950/20 border-2 border-blue-500/20 p-4 rounded-2xl text-xs text-[#93c5fd] flex gap-3 mt-6">
                   <p>
                     <strong>Безопасность сборки:</strong> движок запретит билд и тестирование игры, если зависимости не найдены
                   </p>

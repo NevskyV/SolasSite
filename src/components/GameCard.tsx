@@ -166,7 +166,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
           }}
         />
         {/* Solid inner mask that keeps the card interior clean glass while showing ONLY a crisp edge border glow */}
-        <div className="absolute inset-[3.5px] rounded-[14px] bg-[#141218]/100 backdrop-blur-xl z-0" />
+        <div className="absolute inset-[3px] rounded-[14px] bg-[#141218]/100 backdrop-blur-xl z-0" />
       </div>
 
       {/* 2D Flashlight Spotlight effect (Concept 3.2) */}
@@ -192,7 +192,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
       <div className="absolute inset-0 pointer-events-none z-20">
         {/* Top-Left Bracket */}
         <span
-          className={`absolute w-3.5 h-3.5 border-t-2 border-l-2 rounded-tl-md ${colors.bracket} transition-all duration-300 ease-out`}
+          className={`absolute w-4 h-4 border-t-3 border-l-3 rounded-tl-md ${colors.bracket} transition-all duration-300 ease-out`}
           style={{
             top: isHovered ? '8px' : '-4px',
             left: isHovered ? '8px' : '-4px',
@@ -201,7 +201,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
         />
         {/* Top-Right Bracket */}
         <span
-          className={`absolute w-3.5 h-3.5 border-t-2 border-r-2 rounded-tr-md ${colors.bracket} transition-all duration-300 ease-out`}
+          className={`absolute w-4 h-4 border-t-3 border-r-3 rounded-tr-md ${colors.bracket} transition-all duration-300 ease-out`}
           style={{
             top: isHovered ? '8px' : '-4px',
             right: isHovered ? '8px' : '-4px',
@@ -210,7 +210,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
         />
         {/* Bottom-Left Bracket */}
         <span
-          className={`absolute w-3.5 h-3.5 border-b-2 border-l-2 rounded-bl-md ${colors.bracket} transition-all duration-300 ease-out`}
+          className={`absolute w-4 h-4 border-b-3 border-l-3 rounded-bl-md ${colors.bracket} transition-all duration-300 ease-out`}
           style={{
             bottom: isHovered ? '8px' : '-4px',
             left: isHovered ? '8px' : '-4px',
@@ -219,7 +219,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
         />
         {/* Bottom-Right Bracket */}
         <span
-          className={`absolute w-3.5 h-3.5 border-b-2 border-r-2 rounded-br-md ${colors.bracket} transition-all duration-300 ease-out`}
+          className={`absolute w-4 h-4 border-b-3 border-r-3 rounded-br-md ${colors.bracket} transition-all duration-300 ease-out`}
           style={{
             bottom: isHovered ? '8px' : '-4px',
             right: isHovered ? '8px' : '-4px',

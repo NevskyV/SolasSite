@@ -97,7 +97,7 @@ export default function EdlSandbox() {
           <h2 className="font-display font-bold text-2xl md:text-4xl text-white mt-4 tracking-tight">
             Entity | Data | Logic
           </h2>
-          <p className="mt-4 text-sm text-[#cac4d0] max-w-xxl mx-auto">
+          <p className="mt-4 text-m text-[#cac4d0] max-w-xxl mx-auto">
             В Solas сущности могут хранить только 1 экземпляр компонента из-за особенности поиска. Поиск осуществляется при помощи битовых масок, где каждый бит отвечает за наличие компонента у сущности. тип сущности не объявляется вручную. В будущем редакторе тип сущности будет определяться автоматически, чтобы упростить навигацию и поиск сущностей по типу. Попробуйте кликать по компонентам!
           </p>
         </div>
@@ -162,9 +162,12 @@ export default function EdlSandbox() {
               <span className="text-[10px] tracking-wider bg-white/5 px-3 py-1.5 rounded-full border border-white/10 text-slate-300 uppercase font-semibold">
                 РЕЖИМ АВТООПРЕДЕЛЕНИЯ (EDL)
               </span>
-              <span className="text-[10px] text-m3-primary font-bold bg-m3-primaryContainer/30 border border-m3-primary/20 px-3 py-1 rounded-lg">
-                BITMASK INDEX: {bitmask.slice(0, 4)} {bitmask.slice(4, 8)} {bitmask.slice(8, 12)}
-              </span>
+              <div>
+                <span className="text-slate-400">GUID:</span>
+                <span className="text-white font-bold tracking-tight bg-black/40 px-2.5 py-1 rounded-lg border-2 border-white/5">
+                  da647b0a-3d23-45ab-bc10-ef1831c19010
+                </span>
+              </div>
             </div>
 
             {/* Glowing Orb Canvas with rich morphing physics - Centered */}
@@ -267,13 +270,13 @@ export default function EdlSandbox() {
                 <span className="text-xs font-mono font-bold text-m3-tertiary uppercase tracking-wider">
                   СОСТАВ СУЩНОСТИ
                 </span>
-                <span className="text-[10px] font-mono px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-white font-bold">
+                <span className="text-[10px] font-mono px-2.5 py-1 rounded-lg bg-black/40 border-2 border-white/10 text-white font-bold">
                   {selectedComponents.length} {selectedComponents.length === 1 ? 'компонент' : 'компонентов'}
                 </span>
               </div>
 
               {/* Added Components list */}
-              <div className="h-[280px] overflow-y-auto pl-1 px-1.5 py-1.5 scrollbox border border-white/5 bg-black/20 rounded-2xl">
+              <div className="h-[310px] overflow-y-auto pl-1 px-1.5 py-1.5 scrollbox border-2 border-white/5 bg-black/20 rounded-2xl">
                 <AnimatePresence initial={false} mode="popLayout">
                   {selectedComponents.length === 0 ? (
                     <motion.div
@@ -281,7 +284,7 @@ export default function EdlSandbox() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="text-center py-12 text-xs text-[#cac4d0]/50 border border-dashed border-white/10 rounded-xl h-full flex flex-col items-center justify-center gap-2"
+                      className="text-center py-12 text-xs text-[#cac4d0]/50 border-2 border-dashed border-white/10 rounded-xl h-full flex flex-col items-center justify-center gap-2"
                     >
                       <Settings className="w-8 h-8 text-white/20 animate-pulse" />
                       <span>Сущность пока пуста</span>
@@ -298,7 +301,7 @@ export default function EdlSandbox() {
                         className="mb-2"
                       >
                         <div
-                          className={`p-3 rounded-xl border flex items-center justify-between text-xs font-mono font-medium ${
+                          className={`p-3 rounded-xl border-2 flex items-center justify-between text-xs font-mono font-medium ${
                             comp.type === 'data'
                               ? 'bg-m3-tertiaryContainer/25 border-m3-tertiary/35 text-m3-onTertiaryContainer'
                               : 'bg-m3-primaryContainer/25 border-m3-primary/35 text-m3-onPrimaryContainer'
@@ -328,10 +331,9 @@ export default function EdlSandbox() {
             </div>
 
             {/* Technical Diagnostics Footer */}
-            <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-[#cac4d0]">
-              <span className="text-slate-400">GUID:</span>
-              <span className="text-white font-bold tracking-tight bg-black/40 px-2.5 py-1 rounded-lg border border-white/5">
-                da647b0a-3d23-45ab-bc10-ef1831c19010
+            <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-center font-mono text-[11px] text-[#cac4d0]">
+              <span className="text-[12px] text-m3-primary font-bold bg-m3-primaryContainer/30 border-2 border-m3-primary/20 px-3 py-1 rounded-lg">
+                BITMASK INDEX: {bitmask.slice(0, 4)} {bitmask.slice(4, 8)} {bitmask.slice(8, 12)}
               </span>
             </div>
 
@@ -350,10 +352,10 @@ export default function EdlSandbox() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs font-mono text-m3-tertiary flex items-center gap-1.5 bg-m3-tertiaryContainer/30 border border-m3-tertiary/20 px-3 py-1.5 rounded-xl font-bold">
+                <span className="text-xs font-mono text-m3-tertiary flex items-center gap-1.5 bg-m3-tertiaryContainer/30 border-2 border-m3-tertiary/20 px-3 py-1.5 rounded-xl font-bold">
                   <span className="w-2 h-2 rounded-full bg-m3-tertiary" /> Data (Структуры)
                 </span>
-                <span className="text-xs font-mono text-m3-primary flex items-center gap-1.5 bg-m3-primaryContainer/30 border border-m3-primary/20 px-3 py-1.5 rounded-xl font-bold">
+                <span className="text-xs font-mono text-m3-primary flex items-center gap-1.5 bg-m3-primaryContainer/30 border-2 border-m3-primary/20 px-3 py-1.5 rounded-xl font-bold">
                   <span className="w-2 h-2 rounded-full bg-m3-primary" /> Logic (Системы)
                 </span>
               </div>
@@ -375,7 +377,7 @@ export default function EdlSandbox() {
                         id={`add-comp-${comp.id}`}
                         onClick={() => addComponent(comp)}
                         disabled={isAdded}
-                        className={`text-left p-3 rounded-2xl border text-xs flex flex-col justify-between transition-all ${
+                        className={`text-left p-3 rounded-2xl border-2 text-xs flex flex-col justify-between transition-all ${
                           isAdded
                             ? 'bg-white/5 border-white/5 text-[#cac4d0]/40 cursor-not-allowed opacity-50'
                             : 'bg-m3-tertiaryContainer/10 hover:bg-m3-tertiaryContainer/20 border-m3-tertiary/25 hover:border-m3-tertiary/60 text-m3-onTertiaryContainer hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-md'
@@ -406,7 +408,7 @@ export default function EdlSandbox() {
                         id={`add-comp-${comp.id}`}
                         onClick={() => addComponent(comp)}
                         disabled={isAdded}
-                        className={`text-left p-3 rounded-2xl border text-xs flex flex-col justify-between transition-all ${
+                        className={`text-left p-3 rounded-2xl border-2 text-xs flex flex-col justify-between transition-all ${
                           isAdded
                             ? 'bg-white/5 border-white/5 text-[#cac4d0]/40 cursor-not-allowed opacity-50'
                             : 'bg-m3-primaryContainer/10 hover:bg-m3-primaryContainer/20 border-m3-primary/25 hover:border-m3-primary/60 text-m3-onPrimaryContainer hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-md'

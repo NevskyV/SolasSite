@@ -1,17 +1,13 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { ROADMAP_MODULES } from '../data';
-import { CheckCircle2, Circle, AlertCircle, Sparkles, HelpCircle } from 'lucide-react';
+import { CheckCircle2, Circle } from 'lucide-react';
 import { RoadmapModule } from '../types';
 
 export default function Roadmap() {
   const [hoveredModuleId, setHoveredModuleId] = useState<string | null>(null);
+  const [hoveredRect, setHoveredRect] = useState<{ top: number; left: number; width: number } | null>(null);
   const [clickedModule, setClickedModule] = useState<RoadmapModule | null>(null);
 
   // Grab-to-scroll horizontal container logic
@@ -28,6 +24,40 @@ export default function Roadmap() {
   // Edge hover scrolling properties
   const scrollSpeedRef = useRef<number>(0);
   const rafIdRef = useRef<number | null>(null);
+
+  // 1. Состояние для точных координат портала
+  const [popupCoords, setPopupCoords] = useState<{ top: number; left: number } | null>(null);
+
+  React.useLayoutEffect(() => {
+    if (!hoveredModuleId) {
+      setPopupCoords(null);
+      return;
+    }
+
+    let animationFrameId: number;
+
+    const updatePosition = () => {
+      // Цепляемся именно к шарику!
+      const ballEl = document.getElementById(`roadmap-ball-${hoveredModuleId}`);
+      if (!ballEl) return;
+
+      const ballRect = ballEl.getBoundingClientRect();
+
+      setPopupCoords({
+        // Фиксированный отступ в 12px НАД шариком
+        top: ballRect.top - 12,
+        left: ballRect.left + ballRect.width / 2,
+      });
+
+      animationFrameId = requestAnimationFrame(updatePosition);
+    };
+
+    updatePosition();
+
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, [hoveredModuleId]);
 
   const startEdgeScrollLoop = () => {
     if (rafIdRef.current) return;
@@ -50,16 +80,14 @@ export default function Roadmap() {
     const rect = containerRef.current.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const width = rect.width;
-    
-    const threshold = 120; // active hover zone width in pixels from each edge
+
+    const threshold = 120;
     if (mouseX < threshold && mouseX > 0) {
-      // Near left edge: scroll direction is negative
-      const intensity = (threshold - mouseX) / threshold; // 0 to 1
-      scrollSpeedRef.current = -intensity * 55; // speed factor
+      const intensity = (threshold - mouseX) / threshold;
+      scrollSpeedRef.current = -intensity * 55;
     } else if (mouseX > width - threshold && mouseX < width) {
-      // Near right edge: scroll direction is positive
-      const intensity = (mouseX - (width - threshold)) / threshold; // 0 to 1
-      scrollSpeedRef.current = intensity * 55; // speed factor
+      const intensity = (mouseX - (width - threshold)) / threshold;
+      scrollSpeedRef.current = intensity * 55;
     } else {
       scrollSpeedRef.current = 0;
     }
@@ -78,8 +106,9 @@ export default function Roadmap() {
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return;
     setIsDragging(true);
+    setHoveredModuleId(null); // Скрываем попап при перетаскивании
     setStartX(e.pageX - scrollRef.current.offsetLeft);
-    scrollRef.current.style.scrollBehavior = 'auto'; // Disable scroll smooth during drag for instant response
+    scrollRef.current.style.scrollBehavior = 'auto';
     setScrollLeft(scrollRef.current.scrollLeft);
     setHasMoved(false);
   };
@@ -97,7 +126,7 @@ export default function Roadmap() {
     if (Math.abs(walk) > 4) {
       setHasMoved(true);
     }
-    
+
     const targetScrollLeft = scrollLeft - walk;
     const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
 
@@ -125,6 +154,8 @@ export default function Roadmap() {
     ? (lastCompletedIndex / (ROADMAP_MODULES.length - 1)) * 100
     : 0;
 
+  const activeHoveredModule = ROADMAP_MODULES.find(m => m.id === hoveredModuleId);
+
   return (
     <section 
       ref={containerRef}
@@ -142,7 +173,7 @@ export default function Roadmap() {
           <h2 className="font-display font-bold text-2xl md:text-4xl text-white mt-2 tracking-tight">
             Роадмап проекта
           </h2>
-          <p className="mt-3 text-sm text-[#cac4d0] max-w-xl mx-auto">
+          <p className="mt-3 text-m text-[#cac4d0] max-w-xl mx-auto">
             Текущий статус разработки ключевых компонентов движка. Наведите курсор на модули, чтобы узнать подробности.
           </p>
         </div>
@@ -157,19 +188,19 @@ export default function Roadmap() {
             onMouseLeave={handleMouseUp}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
-            className={`overflow-x-auto overflow-y-visible pt-48 pb-16 -mt-36 scroll-smooth select-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative ${
+            onScroll={() => setHoveredModuleId(null)} // Скрываем попап при скролле
+            className={`overflow-x-auto overflow-y-visible -px-40 pt-5 scroll-smooth select-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative ${
               isDragging ? 'cursor-grabbing' : 'cursor-grab'
             }`}
           >
-            {/* Inner stretchy container that has perfect width and supports bouncy spring transition */}
+            {/* Inner stretchy container */}
             <motion.div 
-              className="relative flex gap-x-12 px-24 py-4 min-w-max"
+              className="relative flex gap-x-3 py-4 min-w-max"
               animate={{ x: overscrollX }}
               transition={isDragging ? { type: 'tween', duration: 0 } : { type: 'spring', stiffness: 350, damping: 25 }}
             >
-              {/* Horizontal Track (straight line through the center of point balls, which is top-[20px] vertically) */}
-              <div className="absolute top-[20px] left-[184px] right-[184px] h-1 bg-white/10 -translate-y-1/2 rounded z-0 pointer-events-none">
-                {/* Dynamic Progress Line covering through all completed modules */}
+              {/* Horizontal Track */}
+              <div className="absolute top-[20px] left-[85px] right-[85px] h-1 bg-white/10 -translate-y-1/2 rounded z-0 pointer-events-none">
                 <div 
                   className="absolute top-0 left-0 h-full bg-gradient-to-r from-m3-primary to-m3-tertiary rounded shadow-[0_0_12px_rgba(208,188,255,0.7)] transition-all duration-500 ease-out" 
                   style={{ width: `${progressPercent}%` }}
@@ -177,25 +208,24 @@ export default function Roadmap() {
               </div>
 
               {/* Points Container */}
-              {ROADMAP_MODULES.map((module, idx) => {
+              {ROADMAP_MODULES.map((module) => {
                 const isHovered = hoveredModuleId === module.id;
                 
                 return (
                   <div
                     key={module.id}
+                    id={`roadmap-point-${module.id}`}
                     className="w-44 flex-shrink-0 flex flex-col items-center relative z-10"
-                    onMouseEnter={() => setHoveredModuleId(module.id)}
+                    onMouseEnter={() => !isDragging && setHoveredModuleId(module.id)}
                     onMouseLeave={() => setHoveredModuleId(null)}
                     onClick={() => {
                       if (hasMoved) return;
-                      if (window.innerWidth < 640) {
-                        setClickedModule(module);
-                      }
+                      if (window.innerWidth < 640) setClickedModule(module);
                     }}
-                    id={`roadmap-point-${module.id}`}
                   >
                     {/* Point Ball */}
                     <motion.div
+                      id={`roadmap-ball-${module.id}`}
                       animate={isHovered ? { scale: 1.35 } : { scale: 1 }}
                       transition={{ type: 'spring', stiffness: 450, damping: 20 }}
                       className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer relative z-20 shadow-xl transition-colors duration-300 mt-10 ${
@@ -234,40 +264,6 @@ export default function Roadmap() {
                          module.status === 'in-progress' ? 'В разработке' : 'В планах'}
                       </span>
                     </div>
-
-                    {/* POPUP CARD TRIGGERS ON HOVER (Desktop) & CLICKS (Mobile Fallback) */}
-                    <AnimatePresence>
-                      {isHovered && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 15, scale: 0.92 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                          transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                          className="absolute bottom-28 w-60 p-4 rounded-2xl m3-glass border border-m3-primary/20 shadow-2xl z-50 text-left pointer-events-none md:block"
-                          id={`timeline-popup-${module.id}`}
-                        >
-                          {/* Little indicator anchor pointer */}
-                          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#1d1b20] border-r border-b border-m3-primary/15 rotate-45" />
-                          
-                          <h4 className="font-display font-bold text-sm text-white mb-1.5">
-                            {module.title}
-                          </h4>
-                          
-                          <p className="text-xs text-[#cac4d0] leading-relaxed mb-3">
-                            {module.description}
-                          </p>
-
-                          <div className="flex flex-wrap gap-1">
-                            {module.tags.map(tag => (
-                              <span key={tag} className="text-[9px] font-mono bg-white/5 px-2 py-0.5 rounded text-white font-medium border border-white/5">
-                                #{tag}
-                              </span>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
                   </div>
                 );
               })}
@@ -283,7 +279,57 @@ export default function Roadmap() {
           </p>
         </div>
 
-        {/* Popup Mobile Dialog for click fallback */}
+        {/* Desktop Hover Popup (Portal to Body) */}
+        {typeof document !== 'undefined' && createPortal(
+          <AnimatePresence>
+            {activeHoveredModule && popupCoords && (
+              /* 1. ВНЕШНИЙ DIV: Отвечает ТОЛЬКО за фиксированную позицию и translate(-50%, -100%) */
+              <div
+                key={activeHoveredModule.id}
+                style={{
+                  position: 'fixed',
+                  top: `${popupCoords.top}px`,
+                  left: `${popupCoords.left}px`,
+                  transform: 'translate(-50%, -100%)', // Нижний край попапа ТЕПЕРЬ МЕРТВО зафиксирован!
+                  zIndex: 9999,
+                }}
+                className="hidden md:block pointer-events-none"
+              >
+                {/* 2. ВНУТРЕННИЙ MOTION.DIV: Отвечает ТОЛЬКО за красивую анимацию */ }
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="w-60 p-4 rounded-2xl m3-glass border border-m3-primary/20 shadow-2xl text-left relative"
+                  id={`timeline-popup-${activeHoveredModule.id}`}
+                >
+                  {/* Стрелочка снизу (всегда на одном месте) */}
+                  <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#1d1b20] border-r border-b border-m3-primary/15 rotate-45" />
+
+                  <h4 className="font-display font-bold text-sm text-white mb-1.5">
+                    {activeHoveredModule.title}
+                  </h4>
+
+                  <p className="text-xs text-[#cac4d0] leading-relaxed mb-3">
+                    {activeHoveredModule.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1">
+                    {activeHoveredModule.tags.map(tag => (
+                      <span key={tag} className="text-[9px] font-mono bg-white/5 px-2 py-0.5 rounded text-white font-medium border border-white/5">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
+
+        {/* Popup Mobile Dialog */}
         {typeof document !== 'undefined' && createPortal(
           <AnimatePresence>
             {clickedModule && (
@@ -305,7 +351,7 @@ export default function Roadmap() {
                     <button
                       id="roadmap-close-details"
                       onClick={() => setClickedModule(null)}
-                      className="text-white hover:text-m3-primary p-1 bg-white/5 rounded-full"
+                      className="text-white hover:text-m3-primary p-1 bg-[#1d1b20] rounded-full"
                     >
                       ×
                     </button>

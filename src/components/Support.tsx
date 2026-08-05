@@ -33,7 +33,7 @@ export default function Support() {
           <h2 className="font-display font-bold text-2xl md:text-4xl text-white mt-4 tracking-tight">
             Поддержка
           </h2>
-          <p className="mt-3 text-sm text-[#cac4d0] max-w-lg mx-auto">
+          <p className="mt-3 text-m text-[#cac4d0] max-w-lg mx-auto">
             Solas создаётся независимыми инди-разработчиками. Вы можете помочь нам донатом за символическую сумму.
           </p>
         </div>
@@ -55,70 +55,13 @@ export default function Support() {
 
               {/* Polished custom geometric SVG QR mockup or Real Image */}
               <div className="bg-white p-4 rounded-2xl shadow-inner mb-4 w-44 h-44 flex items-center justify-center relative overflow-hidden">
-                {!qrError ? (
-                  <img 
+                {<img
                     src={`${import.meta.env.BASE_URL}qr.png`} 
                     alt="Донат QR" 
                     onError={() => setQrError(true)} 
                     className="w-full h-full object-contain select-none" 
                     referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  <svg className="w-full h-full text-black select-none" viewBox="0 0 100 100" fill="currentColor">
-                    {/* Position detection patterns (Top Left) */}
-                    <rect x="5" y="5" width="22" height="22" rx="2" />
-                    <rect x="9" y="9" width="14" height="14" rx="1" fill="white" />
-                    <rect x="12" y="12" width="8" height="8" rx="0.5" />
-                    
-                    {/* Position detection patterns (Top Right) */}
-                    <rect x="73" y="5" width="22" height="22" rx="2" />
-                    <rect x="77" y="9" width="14" height="14" rx="1" fill="white" />
-                    <rect x="80" y="12" width="8" height="8" rx="0.5" />
-
-                    {/* Position detection patterns (Bottom Left) */}
-                    <rect x="5" y="73" width="22" height="22" rx="2" />
-                    <rect x="9" y="77" width="14" height="14" rx="1" fill="white" />
-                    <rect x="12" y="80" width="8" height="8" rx="0.5" />
-
-                    {/* Small alignment block */}
-                    <rect x="73" y="73" width="8" height="8" rx="1" />
-                    <rect x="80" y="80" width="8" height="8" rx="1" />
-
-                    {/* Various bits & data patterns */}
-                    <rect x="32" y="5" width="6" height="6" />
-                    <rect x="42" y="9" width="12" height="6" />
-                    <rect x="58" y="5" width="6" height="12" />
-                    <rect x="32" y="16" width="18" height="6" />
-                    <rect x="32" y="27" width="6" height="12" />
-                    <rect x="42" y="27" width="12" height="6" />
-                    <rect x="10" y="32" width="12" height="6" />
-                    <rect x="5" y="42" width="18" height="6" />
-
-                    {/* Center branding icon representation */}
-                    <rect x="40" y="40" width="20" height="20" rx="4" fill="white" />
-                    <circle cx="50" cy="50" r="6" fill="#381E72" />
-                    
-                    {/* Bottom right bits */}
-                    <rect x="63" y="32" width="16" height="6" />
-                    <rect x="83" y="32" width="12" height="6" />
-                    <rect x="63" y="42" width="6" height="18" />
-                    <rect x="74" y="42" width="12" height="6" />
-                    <rect x="5" y="52" width="6" height="12" />
-                    <rect x="16" y="52" width="12" height="6" />
-                    <rect x="32" y="52" width="6" height="12" />
-                    <rect x="42" y="58" width="18" height="6" />
-                    
-                    <rect x="32" y="68" width="12" height="6" />
-                    <rect x="48" y="68" width="12" height="12" />
-                    <rect x="63" y="68" width="6" height="22" />
-                    <rect x="32" y="78" width="6" height="12" />
-                    <rect x="42" y="84" width="22" height="6" />
-                    <rect x="5" y="63" width="12" height="6" />
-                    <rect x="16" y="68" width="10" height="6" />
-                    <rect x="74" y="52" width="18" height="12" />
-                    <rect x="83" y="68" width="12" height="12" />
-                  </svg>
-                )}
+                  />}
 
                 {/* Scan Overlay Effect */}
                 <div className="absolute inset-x-0 h-0.5 bg-m3-primary shadow-[0_0_8px_#D0BCFF] animate-[bounce_3s_ease-in-out_infinite]" />
@@ -134,14 +77,13 @@ export default function Support() {
           {/* RIGHT COLUMN: Supporting Appeal - col-span-7 */}
           <div className="md:col-span-7 space-y-5 text-center md:text-left">
             <h3 className="font-display font-bold text-lg md:text-xl text-white flex items-center justify-center md:justify-start gap-2.5">
-              <Heart className="w-5 h-5 text-m3-primary fill-m3-primary/20 animate-pulse" />
               Помогите создать движок мечты
             </h3>
             
             <p className="text-[#cac4d0] text-sm leading-relaxed max-w-xl">
               Разработка <span className="font-semibold text-white">Solas</span> : независимый шаг к созданию совершенных условий для геймдева. Мы пишем высокопроизводительный, полностью бесплатный движок на .NET 10.
             </p>
-            <p className="text-[#cac4d0] text-sm leading-relaxed max-w-xl">
+            <p className="text-[#cac4d0] text-m leading-relaxed max-w-xl">
               Ваши пожертвования мотивируют нас и помогают быстрее выпускать обновления и писать документацию, внесите свой вклад в open-source и станьте частью комьюнити.
             </p>
             
@@ -152,11 +94,11 @@ export default function Support() {
                 variant="primary"
                 className="px-6 py-3.5"
               >
-                <Sparkles className="w-4 h-4" />
+                <Heart className="w-5 h-5 animate-pulse" />
                 СДЕЛАТЬ ДОНАТ
               </GameButton>
               
-              <span className="text-[10px] font-mono text-[#cac4d0]/60 max-w-[200px] text-center sm:text-left">
+              <span className="text-[12px] font-mono text-[#cac4d0]/60 max-w-[200px] text-center sm:text-left">
                 Cloud Tips
               </span>
             </div>
@@ -194,7 +136,7 @@ export default function Support() {
               <h3 className="font-display font-semibold text-2xl md:text-3xl text-white mb-2">
                 Соцсети проекта
               </h3>
-              <p className="text-xs text-[#cac4d0] leading-relaxed">
+              <p className="text-sm text-[#cac4d0] leading-relaxed">
                 Присоединяйтесь к нашему растущему телеграмм каналу! Следите за новостями и релизами, обсуждайте архитектуру, делитесь бенчмарками и узнавайте инсайды разработки.
               </p>
             </div>
