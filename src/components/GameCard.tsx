@@ -11,22 +11,21 @@ interface GameCardProps {
   className?: string;
   accent?: 'primary' | 'secondary' | 'tertiary';
   id?: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
-export default function GameCard({ children, className = '', accent = 'primary', id }: GameCardProps) {
+export default function GameCard({ children, className = '', accent = 'primary', id, onClick }: GameCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [cardSize, setCardSize] = useState({ width: 0, height: 0 });
 
-  // Motion values for smooth 3D tilt (Concept 1.1)
+  // Motion values for spotlight and shadow offset
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // Springs for snappy, elastic physical response (Concept 2.2)
+  // Springs for snappy, elastic physical response
   const springConfig = { stiffness: 180, damping: 15, mass: 1 };
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), springConfig);
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), springConfig);
 
   // Light-cast shadow offset (Concept 3.2 - opposite direction of light)
   const shadowX = useSpring(useTransform(x, [-0.5, 0.5], [12, -12]), springConfig);
@@ -144,17 +143,32 @@ export default function GameCard({ children, className = '', accent = 'primary',
     <motion.div
       ref={cardRef}
       id={id}
+      onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
-        rotateX,
-        rotateY,
         boxShadow: boxShadowStyle,
-        transformStyle: 'preserve-3d',
       }}
-      className={`relative rounded-3xl m3-glass p-6 overflow-hidden transition-colors duration-300 group ${className}`}
+      className={`relative rounded-2xl m3-glass p-6 overflow-hidden transition-colors duration-300 group ${className}`}
     >
+      {/* Google Expressive Material Design Spinning Rainbow Border Glow on Hover */}
+      <div 
+        className="absolute -inset-[1px] rounded-2xl pointer-events-none transition-opacity duration-500 overflow-hidden z-0"
+        style={{ opacity: isHovered ? 1 : 0 }}
+      >
+        <div 
+          className="absolute -inset-[300%] animate-[spin_6s_linear_infinite]"
+          style={{
+            background: 'conic-gradient(from 0deg, var(--color-m3-primary) 0deg, var(--color-m3-tertiary) 72deg, var(--color-m3-secondary) 144deg, var(--color-m3-onTertiaryContainer) 216deg, var(--color-m3-onPrimaryContainer) 288deg, var(--color-m3-primary) 360deg)',
+            filter: 'blur(3px)',
+            opacity: 0.95,
+          }}
+        />
+        {/* Solid inner mask that keeps the card interior clean glass while showing ONLY a crisp edge border glow */}
+        <div className="absolute inset-[3.5px] rounded-[14px] bg-[#141218]/100 backdrop-blur-xl z-0" />
+      </div>
+
       {/* 2D Flashlight Spotlight effect (Concept 3.2) */}
       <div
         className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-300"
@@ -174,11 +188,11 @@ export default function GameCard({ children, className = '', accent = 'primary',
         }}
       />
 
-      {/* Assembly corner brackets (Concept 1.1) */}
+      {/* Assembly corner brackets matching panel curvature */}
       <div className="absolute inset-0 pointer-events-none z-20">
         {/* Top-Left Bracket */}
         <span
-          className={`absolute w-3 h-3 border-t-2 border-l-2 ${colors.bracket} transition-all duration-300 ease-out`}
+          className={`absolute w-3.5 h-3.5 border-t-2 border-l-2 rounded-tl-md ${colors.bracket} transition-all duration-300 ease-out`}
           style={{
             top: isHovered ? '8px' : '-4px',
             left: isHovered ? '8px' : '-4px',
@@ -187,7 +201,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
         />
         {/* Top-Right Bracket */}
         <span
-          className={`absolute w-3 h-3 border-t-2 border-r-2 ${colors.bracket} transition-all duration-300 ease-out`}
+          className={`absolute w-3.5 h-3.5 border-t-2 border-r-2 rounded-tr-md ${colors.bracket} transition-all duration-300 ease-out`}
           style={{
             top: isHovered ? '8px' : '-4px',
             right: isHovered ? '8px' : '-4px',
@@ -196,7 +210,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
         />
         {/* Bottom-Left Bracket */}
         <span
-          className={`absolute w-3 h-3 border-b-2 border-l-2 ${colors.bracket} transition-all duration-300 ease-out`}
+          className={`absolute w-3.5 h-3.5 border-b-2 border-l-2 rounded-bl-md ${colors.bracket} transition-all duration-300 ease-out`}
           style={{
             bottom: isHovered ? '8px' : '-4px',
             left: isHovered ? '8px' : '-4px',
@@ -205,7 +219,7 @@ export default function GameCard({ children, className = '', accent = 'primary',
         />
         {/* Bottom-Right Bracket */}
         <span
-          className={`absolute w-3 h-3 border-b-2 border-r-2 ${colors.bracket} transition-all duration-300 ease-out`}
+          className={`absolute w-3.5 h-3.5 border-b-2 border-r-2 rounded-br-md ${colors.bracket} transition-all duration-300 ease-out`}
           style={{
             bottom: isHovered ? '8px' : '-4px',
             right: isHovered ? '8px' : '-4px',

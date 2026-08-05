@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Heart, Send, CheckCircle2, QrCode, Sparkles, ExternalLink } from 'lucide-react';
+import GameButton from './GameButton';
 
 export default function Support() {
   const [qrError, setQrError] = useState(false);
@@ -44,13 +45,13 @@ export default function Support() {
           <div className="md:col-span-5 flex justify-center">
             <motion.div 
               whileHover={{ scale: 1.02, rotate: 1 }}
-              className="p-6 rounded-3xl m3-glass border border-white/10 flex flex-col items-center justify-center text-center relative shadow-2xl w-full max-w-[280px]"
+              className="p-6 rounded-2xl m3-glass border border-white/10 flex flex-col items-center justify-center text-center relative shadow-2xl w-full max-w-[280px]"
             >
-              {/* Scan target lines */}
-              <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-m3-primary rounded-tl" />
-              <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-m3-primary rounded-tr" />
-              <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-m3-primary rounded-bl" />
-              <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-m3-primary rounded-br" />
+              {/* Scan target lines matching panel corners */}
+              <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-m3-primary rounded-tl-md" />
+              <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-m3-primary rounded-tr-md" />
+              <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-m3-primary rounded-bl-md" />
+              <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-m3-primary rounded-br-md" />
 
               {/* Polished custom geometric SVG QR mockup or Real Image */}
               <div className="bg-white p-4 rounded-2xl shadow-inner mb-4 w-44 h-44 flex items-center justify-center relative overflow-hidden">
@@ -138,24 +139,22 @@ export default function Support() {
             </h3>
             
             <p className="text-[#cac4d0] text-sm leading-relaxed max-w-xl">
-              Разработка <span className="font-semibold text-white">Solas</span> — это независимый шаг к созданию совершенных условий для геймдева. Мы пишем высокопроизводительный, полностью бесплатный движок на .NET 10.
+              Разработка <span className="font-semibold text-white">Solas</span> : независимый шаг к созданию совершенных условий для геймдева. Мы пишем высокопроизводительный, полностью бесплатный движок на .NET 10.
             </p>
             <p className="text-[#cac4d0] text-sm leading-relaxed max-w-xl">
               Ваши пожертвования мотивируют нас и помогают быстрее выпускать обновления и писать документацию, внесите свой вклад в open-source и станьте частью комьюнити.
             </p>
             
             <div className="pt-2 flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
-              <motion.a
+              <GameButton
                 id="donation-wallet-btn"
-                href="https://pay.cloudtips.ru/p/65fe2c6c"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileTap={{ scale: 0.96 }}
-                className="px-5 py-3 bg-m3-primary text-m3-onPrimary font-mono font-bold text-xs tracking-wide flex items-center gap-2 cursor-pointer shadow-lg m3-btn-expressive no-underline"
+                onClick={() => window.open('https://pay.cloudtips.ru/p/65fe2c6c', '_blank')}
+                variant="primary"
+                className="px-6 py-3.5"
               >
                 <Sparkles className="w-4 h-4" />
                 СДЕЛАТЬ ДОНАТ
-              </motion.a>
+              </GameButton>
               
               <span className="text-[10px] font-mono text-[#cac4d0]/60 max-w-[200px] text-center sm:text-left">
                 Cloud Tips
@@ -180,7 +179,7 @@ export default function Support() {
               boxShadow: '0 25px 50px rgba(0,0,0,0.45), 0 0 40px rgba(208, 188, 255, 0.08)'
             }}
             transition={{ type: 'spring', stiffness: 200, damping: 22 }}
-            className="p-8 md:p-12 rounded-3xl m3-glass border border-white/10 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 transition-[border-color,box-shadow] duration-300 shadow-2xl"
+            className="p-8 md:p-12 rounded-2xl m3-glass border border-white/10 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 transition-[border-color,box-shadow] duration-300 shadow-2xl"
           >
             {/* Background glowing shape matching "Демо-стенд" style */}
             <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-m3-primaryContainer/20 to-transparent pointer-events-none z-0" />
@@ -190,7 +189,7 @@ export default function Support() {
 
             <div className="text-left relative z-10 max-w-lg">
               <span className="text-[10px] font-mono text-m3-primary font-bold uppercase tracking-widest block mb-2">
-                — СВЯЗЬ И ОБЩЕНИЕ
+                СВЯЗЬ И ОБЩЕНИЕ
               </span>
               <h3 className="font-display font-semibold text-2xl md:text-3xl text-white mb-2">
                 Соцсети проекта

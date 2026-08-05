@@ -6,6 +6,7 @@
 import React from 'react';
 import { BookOpen, Download, Cpu, Sparkles, Github } from 'lucide-react';
 import { motion } from 'motion/react';
+import GameButton from './GameButton';
 
 interface HeaderProps {
   activeTab: 'landing' | 'docs';
@@ -21,7 +22,7 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
       transition={{ duration: 0.7, type: 'spring', stiffness: 200, damping: 24 }}
       className="sticky top-2 sm:top-4 z-20 w-full max-w-7xl mx-auto px-2 sm:px-4"
     >
-      <div className="w-full px-3 py-2 sm:px-6 sm:py-3 md:px-8 m3-glass rounded-2xl sm:rounded-3xl shadow-2xl flex items-center justify-between gap-2">
+      <div className="w-full px-3 py-2 sm:px-6 sm:py-3 md:px-8 m3-glass rounded-2xl shadow-2xl flex items-center justify-between gap-2">
         
         {/* Logo */}
         <div 
@@ -95,16 +96,15 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
 
         {/* Action Button */}
         <div className="flex items-center gap-2">
-          <motion.a
-            href="https://github.com/NevskyV/Solas"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileTap={{ scale: 0.96 }}
-            className="hidden sm:flex items-center gap-2 px-4.5 py-2.5 bg-m3-primary text-m3-onPrimary text-xs font-semibold tracking-wide shadow-[0_4px_16px_rgba(208,188,255,0.25)] m3-btn-expressive cursor-pointer rounded-full"
+          <GameButton
+            id="header-github-source-btn"
+            onClick={() => window.open('https://github.com/NevskyV/Solas', '_blank')}
+            variant="primary"
+            className="hidden sm:flex px-4.5 py-2 text-xs"
           >
             <Github className="w-4 h-4" />
             Source
-          </motion.a>
+          </GameButton>
         </div>
 
       </div>

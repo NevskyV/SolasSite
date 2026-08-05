@@ -113,8 +113,6 @@ export default function GameButton({
         disabled={disabled}
         onClick={handleTriggerClick}
         whileHover={{ 
-          scale: 1.03, 
-          y: -1.5,
           boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
         }}
         whileTap={{ 

@@ -142,3 +142,5 @@ export const DEPENDENCY_NODES: DependencyInjectNode[] = [
   { id: 'missing-ui-system', name: 'FeedbackUiSystem', category: 'Logic', injectType: 'AutoInject', status: 'missing' }
 ];
 
+export const FALLBACK_MARKDOWN: Record<string, string> = {}
+

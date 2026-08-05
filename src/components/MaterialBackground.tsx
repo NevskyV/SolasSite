@@ -14,6 +14,8 @@ interface ShapeItem {
   y: number; // percentage of viewport height (vh)
   vx: number;
   vy: number;
+  maxSpeed: number;
+  force: number;
   isAggressive: boolean;
   scale: number;
   isEaten: boolean;
@@ -68,9 +70,12 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
     }
 
     const angle = Math.random() * Math.PI * 2;
-    const speed = isAggressive ? 0.04 + Math.random() * 0.04 : 0.02 + Math.random() * 0.03;
-    const vx = Math.cos(angle) * speed;
-    const vy = Math.sin(angle) * speed;
+    // Each shape gets a randomized individual max speed & force
+    const maxSpeed = isAggressive ? 0.045 + Math.random() * 0.065 : 0.018 + Math.random() * 0.035;
+    const force = isAggressive ? 0.0012 + Math.random() * 0.0028 : 0.0008 + Math.random() * 0.0015;
+    const initialSpeed = maxSpeed * (0.6 + Math.random() * 0.4);
+    const vx = Math.cos(angle) * initialSpeed;
+    const vy = Math.sin(angle) * initialSpeed;
 
     return {
       id: generateId(),
@@ -80,6 +85,8 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
       y,
       vx,
       vy,
+      maxSpeed,
+      force,
       isAggressive,
       scale: 1,
       isEaten: false,
@@ -120,8 +127,22 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
         active.forEach(shape => {
           if (shape.isEaten) return;
 
-          // Aggressive shapes behavior: Hunt closest neutral shape!
+          // Aggressive shapes behavior: Hunt closest neutral shape with repulsion from other red shapes!
           if (shape.isAggressive) {
+            // Repulsion force from other aggressive shapes so they NEVER cluster/swarm
+            active.forEach(other => {
+              if (other.isAggressive && other.id !== shape.id && !other.isEaten) {
+                const rdx = shape.x - other.x;
+                const rdy = shape.y - other.y;
+                const rdist = Math.hypot(rdx, rdy);
+                if (rdist > 0 && rdist < 9) { // 9vw repulsion radius
+                  const repelForce = (9 - rdist) * 0.0025;
+                  shape.vx += (rdx / rdist) * repelForce;
+                  shape.vy += (rdy / rdist) * repelForce;
+                }
+              }
+            });
+
             // Find closest non-eaten neutral shape
             let closest: ShapeItem | null = null;
             let minDist = Infinity;
@@ -140,40 +161,35 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
 
             if (closest) {
               const target: ShapeItem = closest;
-              // Direction vector
               const dx = target.x - shape.x;
               const dy = target.y - shape.y;
               const dist = Math.hypot(dx, dy);
 
               if (dist > 0) {
-                // Apply small steering acceleration towards prey
-                const force = 0.0025;
-                shape.vx += (dx / dist) * force;
-                shape.vy += (dy / dist) * force;
+                // Apply individual steering acceleration towards prey
+                shape.vx += (dx / dist) * shape.force;
+                shape.vy += (dy / dist) * shape.force;
 
-                // Speed limit for aggressive shapes
+                // Individual speed limit for this specific aggressive shape
                 const speed = Math.hypot(shape.vx, shape.vy);
-                const maxSpeed = 0.08;
-                if (speed > maxSpeed) {
-                  shape.vx = (shape.vx / speed) * maxSpeed;
-                  shape.vy = (shape.vy / speed) * maxSpeed;
+                if (speed > shape.maxSpeed) {
+                  shape.vx = (shape.vx / speed) * shape.maxSpeed;
+                  shape.vy = (shape.vy / speed) * shape.maxSpeed;
                 }
 
                 // Check collision (EAT PREY!)
-                const eatRange = 4.0; // trigger range in vw/vh
+                const eatRange = 4.0;
                 if (dist < eatRange && !target.isEaten) {
                   target.isEaten = true;
-                  shape.scale = 1.35; // puff up upon eating
+                  shape.scale = 1.35;
                   shape.flashActive = true;
                 }
               }
             } else {
-              // No prey found: slowly drag back to slow random drifting velocities
               const speed = Math.hypot(shape.vx, shape.vy);
-              const driftSpeed = 0.03;
               if (speed > 0) {
-                shape.vx = (shape.vx / speed) * driftSpeed;
-                shape.vy = (shape.vy / speed) * driftSpeed;
+                shape.vx = (shape.vx / speed) * (shape.maxSpeed * 0.5);
+                shape.vy = (shape.vy / speed) * (shape.maxSpeed * 0.5);
               }
             }
           }
@@ -248,18 +264,20 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
     return () => clearInterval(interval);
   }, []);
 
-  // Handle popping click of an aggressive red shape
-  const handleRedPop = (e: React.MouseEvent, clickedShape: ShapeItem) => {
+  // Handle popping click of any shape
+  const handleShapePop = (e: React.MouseEvent | React.TouchEvent, clickedShape: ShapeItem) => {
     e.stopPropagation();
-    e.preventDefault();
 
     // Trigger visual pop: mark as eaten so it vanishes instantly
     setShapes(prev => prev.map(s => s.id === clickedShape.id ? { ...s, isEaten: true } : s));
 
-    // Spawn 12 colorful red/rose explosion particles
+    // Spawn colorful explosion particles
     const newParticles: ExplosionParticle[] = [];
     const count = 12 + Math.floor(Math.random() * 6);
-    
+    const particleColors = clickedShape.isAggressive 
+      ? ['#f43f5e', '#fda4af', '#e11d48'] 
+      : ['#d0bcff', '#efb8c8', '#86e3ce', '#c2aeff'];
+
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
       const speed = 0.15 + Math.random() * 0.25;
@@ -270,7 +288,7 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         size: 4 + Math.random() * 6,
-        color: Math.random() > 0.4 ? '#f43f5e' : '#fda4af', // rose-500 or rose-300
+        color: particleColors[Math.floor(Math.random() * particleColors.length)],
         opacity: 1,
       });
     }
@@ -309,70 +327,71 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden" id="material-expressive-canvas">
+    <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" id="material-expressive-canvas">
       
       {/* 
         PREMIUM DYNAMICALLY SPINNING GRADIENT CLOUD SYSTEM
         Floating beautiful decorative ambient glows
       */}
-      <div className="absolute inset-0 z-0 select-none overflow-hidden opacity-40">
-        <div className="absolute top-[-10%] right-[-10%] w-[600px] aspect-square rounded-full bg-m3-primary/20 blur-[130px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[700px] aspect-square rounded-full bg-m3-tertiary/15 blur-[140px]" />
+      <div className="absolute inset-0 z-0 select-none overflow-hidden opacity-30">
+        <div className="absolute top-[-10%] right-[-10%] w-[600px] aspect-square rounded-full bg-m3-primary/15 blur-[130px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[700px] aspect-square rounded-full bg-m3-tertiary/10 blur-[140px]" />
         <div className="absolute top-[40%] right-[15%] w-[500px] aspect-square rounded-full bg-m3-secondary/10 blur-[120px]" />
       </div>
 
       {/* 
-        LIVING SHAPE STAGE
+        LIVING SHAPE STAGE - Placed behind page panels (z-0)
       */}
-      <div className="absolute inset-0 z-10 w-full h-full select-none">
+      <div className="absolute inset-0 z-0 w-full h-full select-none">
         {shapes.map((shape) => {
           const pathD = getShapePath(shape.type);
           const isDocs = activeTab === 'docs';
           
-          return (
-            <div
-              key={shape.id}
-              style={{
-                left: `${shape.x}vw`,
-                top: `${shape.y}vh`,
-                width: `${shape.size}px`,
-                height: `${shape.size}px`,
-                position: 'absolute',
-                transform: `scale(${shape.scale}) rotate(${shape.rotation}deg)`,
-                transition: 'transform 0.1s ease-out, opacity 0.5s',
-                pointerEvents: shape.isAggressive ? 'auto' : 'none',
-                zIndex: isDocs && shape.isAggressive ? -1 : 10,
-                opacity: isDocs && shape.isAggressive ? 0.3 : (isDocs ? 0.5 : 1),
-              }}
-              className="flex items-center justify-center drop-shadow-lg"
-            >
-              {/* Aggressive glowing pulse ring */}
-              {shape.isAggressive && (
-                <div className="absolute inset-[-8px] rounded-full border border-rose-500/30 animate-ping pointer-events-none" />
-              )}
+              return (
+                <div
+                  key={shape.id}
+                  onClick={(e) => handleShapePop(e, shape)}
+                  onTouchStart={(e) => handleShapePop(e, shape)}
+                  style={{
+                    left: `${shape.x}vw`,
+                    top: `${shape.y}vh`,
+                    width: `${shape.size}px`,
+                    height: `${shape.size}px`,
+                    position: 'absolute',
+                    transform: `scale(${shape.scale}) rotate(${shape.rotation}deg)`,
+                    transition: 'transform 0.15s ease-out, opacity 0.5s',
+                    pointerEvents: 'auto',
+                    zIndex: isDocs ? -1 : 1,
+                    opacity: isDocs ? 0.3 : 0.85,
+                  }}
+                  className="flex items-center justify-center cursor-pointer select-none group"
+                >
+                  {/* Aggressive glowing pulse ring */}
+                  {shape.isAggressive && (
+                    <div className="absolute inset-[-8px] rounded-full border border-rose-500/40 animate-ping pointer-events-none" />
+                  )}
 
-              {/* Vector representation */}
-              <svg 
-                viewBox="0 0 100 100" 
-                onClick={(e) => shape.isAggressive ? handleRedPop(e, shape) : null}
-                className={`w-full h-full cursor-pointer transition-colors duration-500 select-none ${
-                  shape.flashActive ? 'text-white' : shape.colorClass
-                }`}
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d={pathD} fill="currentColor" />
-                <path 
-                  d={pathD} 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth={shape.isAggressive ? '3.5' : '2.5'} 
-                  className={shape.borderColorClass}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          );
+                  {/* Vector representation */}
+                  <svg 
+                    viewBox="0 0 100 100" 
+                    className={`w-full h-full group-hover:scale-125 group-active:scale-90 transition-transform duration-200 select-none ${
+                      shape.flashActive ? 'text-white' : shape.colorClass
+                    }`}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d={pathD} fill="currentColor" />
+                    <path 
+                      d={pathD} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth={shape.isAggressive ? '3.5' : '2.5'} 
+                      className={shape.borderColorClass}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              );
         })}
 
         {/* Render Explosion Particles */}

@@ -84,24 +84,24 @@
 }
 
 .m3-glass {
-  background: rgba(18, 14, 25, 0.65);
+  background: rgba(20, 16, 28, 0.93);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 3px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .m3-glass-secondary {
-  background: rgba(40, 32, 55, 0.55);
+  background: rgba(30, 24, 42, 0.90);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 2px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .m3-glass-accent {
-  background: rgba(239, 184, 200, 0.12);
+  background: rgba(48, 38, 68, 0.90);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 3px solid rgba(239, 184, 200, 0.32);
+  border: 1.5px solid rgba(239, 184, 200, 0.35);
 }
 
 @keyframes gradient-move-1 {
@@ -219,32 +219,26 @@
 }
 
 .m3-btn-expressive {
-  border-radius: 24px 24px 24px 24px;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
-  animation: morph-out-1 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  border-radius: 24px;
+  transition: border-radius 0.7s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
 }
 .m3-btn-expressive:hover {
-  transform: translateY(-2px);
   animation: morph-hover-1 4s ease-in-out infinite alternate;
 }
 
 .m3-btn-expressive-reverse {
-  border-radius: 24px 24px 24px 24px;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
-  animation: morph-out-1 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  border-radius: 24px;
+  transition: border-radius 0.7s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
 }
 .m3-btn-expressive-reverse:hover {
-  transform: translateY(-2px);
   animation: morph-hover-2 4s ease-in-out infinite alternate;
 }
 
 .m3-btn-expressive-pill {
-  border-radius: 24px 24px 24px 24px;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
-  animation: morph-out-1 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  border-radius: 24px;
+  transition: border-radius 0.7s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
 }
 .m3-btn-expressive-pill:hover {
-  transform: translateY(-2px);
   animation: morph-hover-3 4s ease-in-out infinite alternate;
 }
 
@@ -335,6 +329,7 @@
   padding: 0;
   color: #ede8f5;
   border-radius: 0;
+  border: none;
 }
 
 .markdown-body ul {

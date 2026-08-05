@@ -179,7 +179,7 @@ export default function SpaceHierarchy() {
                       
                       {/* ROOT 1: TOWN BRANCH */}
                       <div className="p-4 rounded-2xl bg-white/2 borde-2r border-white/5 flex flex-col items-center">
-                        <span className="text-[10px] font-mono text-m3-primary uppercase tracking-widest mb-3">— Town Ветка</span>
+                        <span className="text-[10px] font-mono text-m3-primary uppercase tracking-widest mb-3">Town Ветка</span>
                         
                         {/* Town Node */}
                         <button
@@ -233,7 +233,7 @@ export default function SpaceHierarchy() {
 
                       {/* ROOT 2: DUNGEON BRANCH - isolated */}
                       <div className="p-4 rounded-2xl bg-white/2 border-2 border-white/5 flex flex-col items-center">
-                        <span className="text-[10px] font-mono text-m3-tertiary uppercase tracking-widest mb-3">— Dungeon Ветка</span>
+                        <span className="text-[10px] font-mono text-m3-tertiary uppercase tracking-widest mb-3">Dungeon Ветка</span>
 
                         {/* Dungeon Node */}
                         <button
@@ -308,14 +308,14 @@ export default function SpaceHierarchy() {
                   {/* Dynamic diagnosis based on active space selection */}
                   <div className="p-4 bg-white/3 rounded-2xl border-2 border-white/5 mb-5 space-y-3.5">
                     <div>
-                      <span className="text-[10px] font-mono text-[#918d96] block uppercase">— Выбранная локация:</span>
+                      <span className="text-[10px] font-mono text-[#918d96] block uppercase">Выбранная локация:</span>
                       <span className="text-sm font-semibold text-white">
                         {SPACE_NODES.find(n => n.id === selectedSpaceId)?.name}
                       </span>
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-mono text-[#918d96] block uppercase">— Доступные Пространства:</span>
+                      <span className="text-[10px] font-mono text-[#918d96] block uppercase">Доступные Пространства:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {SPACE_NODES.map(node => (
                           accessibilityMap[node.id] && (
@@ -329,7 +329,7 @@ export default function SpaceHierarchy() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-mono text-[#918d96] block uppercase">— Заблокированные ветки:</span>
+                      <span className="text-[10px] font-mono text-[#918d96] block uppercase">Заблокированные ветки:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {SPACE_NODES.map(node => (
                           !accessibilityMap[node.id] && (
@@ -343,7 +343,7 @@ export default function SpaceHierarchy() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-mono text-[#918d96] block uppercase">— Сущности внутри лога:</span>
+                      <span className="text-[10px] font-mono text-[#918d96] block uppercase">Сущности внутри лога:</span>
                       <div className="grid grid-cols-1 gap-1.5 mt-1.5">
                         {SPACE_NODES.find(n => n.id === selectedSpaceId)?.entities.map(ent => (
                           <div key={ent} className="text-xs font-mono p-1.5 bg-black/30 rounded-lg text-white border-2 border-white/5 flex items-center justify-between">
@@ -370,7 +370,6 @@ export default function SpaceHierarchy() {
                 </div>
 
                 <div className="bg-m3-tertiaryContainer/20 p-4 rounded-2xl border border-m3-tertiary/25 text-xs text-m3-onTertiaryContainer flex gap-3 mt-6">
-                  <AlertCircle className="w-5 h-5 text-m3-tertiary shrink-0 mt-0.5" />
                   <p>
                     <strong>Аналогия доступа:</strong> Global Space функционирует как <code>public</code>, в то время как Local Space действует как <code>protected</code> в вертикали вашей иерархии!
                   </p>
@@ -508,7 +507,6 @@ export default function SpaceHierarchy() {
                 </div>
 
                 <div className="bg-blue-950/20 border border-blue-500/20 p-4 rounded-2xl text-xs text-[#93c5fd] flex gap-3 mt-6">
-                  <Shield className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                   <p>
                     <strong>Безопасность сборки:</strong> движок запретит билд и тестирование игры, если зависимости не найдены
                   </p>

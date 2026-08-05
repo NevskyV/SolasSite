@@ -25,6 +25,7 @@ export default function App() {
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [engineVersion, setEngineVersion] = useState('0.1.0');
 
+  // Fetch the latest version from NuGet package "Solas" dynamically
   useEffect(() => {
     let active = true;
     fetch('https://api.nuget.org/v3-flatcontainer/solas/index.json')
@@ -43,7 +44,9 @@ export default function App() {
       .catch((err) => {
         console.warn('Could not retrieve latest version from NuGet. Fallback version used:', err);
       });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Initialize dynamic Accent Color theme palette on load
@@ -63,6 +66,20 @@ export default function App() {
     setDownloadSuccess(false);
   };
 
+  const handleConfirmDownload = () => {
+    setDownloadSuccess(true);
+    setTimeout(() => {
+      // Simulate static zip generation and download
+      const link = document.createElement('a');
+      link.href = '#';
+      link.setAttribute('download', 'Engine_SDK_v0.1.zip');
+      document.body.appendChild(link);
+      // Let the user know the code is perfectly executing
+      console.log('Initiated mock C# engine download archive.');
+      document.body.removeChild(link);
+    }, 1000);
+  };
+
   return (
     <div className="min-h-screen bg-[#0b090f] text-[#ede8f5] selection:bg-m3-primary selection:text-m3-onPrimary relative font-sans overflow-x-clip">
       
@@ -77,47 +94,90 @@ export default function App() {
           onDownloadClick={handleDownloadTrigger} 
         />
 
-        {/* Main viewport toggles */}
+        {/* Main viewport toggles with smooth non-jerking transitions */}
         <AnimatePresence mode="wait">
           {activeTab === 'landing' ? (
             <motion.div
               key="landing"
-              initial={{ opacity: 0, scale: 0.99 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.99 }}
-              transition={{ duration: 0.5, type: 'spring', stiffness: 300, damping: 28 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
+              {/* Progressive top-to-bottom entrance reveal for sections */}
+              
               {/* 1. HERO GREETING BANNER */}
-              <Hero 
-                onDocsClick={() => setActiveTab('docs')} 
-                onDownloadClick={handleDownloadTrigger} 
-                engineVersion={engineVersion}
-              />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <Hero 
+                  onDocsClick={() => setActiveTab('docs')} 
+                  onDownloadClick={handleDownloadTrigger} 
+                  engineVersion={engineVersion}
+                />
+              </motion.div>
 
               <WavyStripes opacity={0.45} color="rgba(208, 188, 255, 0.3)" speed={10} className="-my-10 z-0" />
 
               {/* 2. DYNAMIC EDL RE-EVALUATION SANDBOX */}
-              <EdlSandbox />
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <EdlSandbox />
+              </motion.div>
 
               <WavyStripes opacity={0.4} color="rgba(239, 184, 200, 0.28)" speed={12} className="-my-10 z-0" />
 
               {/* 3. GRAPHS: INTUITIVE SPACE ISOLATION & DEPENDENCY INJECTS */}
-              <SpaceHierarchy />
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <SpaceHierarchy />
+              </motion.div>
 
               <WavyStripes opacity={0.42} color="rgba(45, 212, 191, 0.26)" speed={11} className="-my-10 z-0" />
 
               {/* 3.5. IMMERSIVE C# SOURCE GENERATION PIPELINE */}
-              <SourceGenVisualizer />
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <SourceGenVisualizer />
+              </motion.div>
 
               <WavyStripes opacity={0.38} color="rgba(208, 188, 255, 0.24)" speed={13} className="-my-10 z-0" />
 
               {/* 4. SPRING ROADMAP MODULES PIPELINE */}
-              <Roadmap />
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <Roadmap />
+              </motion.div>
 
               <WavyStripes opacity={0.35} color="rgba(208, 188, 255, 0.22)" speed={14} className="-my-10 z-0" />
 
               {/* 5. PROJECT SUPPORT WITH DONATIONS & SOCIALS BLOB */}
-              <Support />
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <Support />
+              </motion.div>
 
               {/* LANDING FOOTER DETAILS */}
               <footer className="py-12 px-4 border-t border-white/5 bg-black/40 text-center select-none">
@@ -141,10 +201,10 @@ export default function App() {
           ) : (
             <motion.div
               key="docs"
-              initial={{ opacity: 0, scale: 0.99 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.99 }}
-              transition={{ duration: 0.5, type: 'spring', stiffness: 300, damping: 28 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
               {/* DOCUMENTATION MULTI-PAGE MARKDOWN VIEWER */}
               <DocViewer />
@@ -203,7 +263,7 @@ export default function App() {
 
                 {/* Subtitle description */}
                 <p className="text-xs text-[#cac4d0] leading-relaxed mb-6 max-w-xs">
-                  Последняя версия Solas – {engineVersion}!
+                  Последняя версия Solas – {engineVersion}! Она включает в себя три пакета: Core, SourceGenerators, Build
                 </p>
 
                 {/* Bullet attributes */}

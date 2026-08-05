@@ -271,7 +271,7 @@ public partial class TextLogic : Logic, IInitializable
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.3 }}
-                  className="p-5 rounded-3xl m3-glass border-2 border-white/5 space-y-3.5"
+                  className="p-5 rounded-2xl m3-glass border-2 border-white/5 space-y-3.5"
                 >
                   <h4 className="font-display font-bold text-base text-white flex items-center gap-2">
                     {activeFeature.icon}
@@ -369,27 +369,33 @@ public partial class TextLogic : Logic, IInitializable
 
               </div>
 
-              {/* Dual Code Panel comparison layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+              {/* Dual Code Panel comparison layout - Stacked horizontal 2-row format */}
+              <div className="flex flex-col gap-4 flex-1">
                 
-                {/* Visualizer C# Source Code tab */}
+                {/* Visualizer C# Source Code tab (Row 1) */}
                 <div className="flex flex-col rounded-2xl overflow-hidden border-2 border-white/5 bg-black/40">
                   <div className="bg-[#1c1a22] px-3.5 py-2 border-b border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400 select-none">
-                    <span>CleanCode.cs</span>
-                    <span className="text-m3-primary font-bold">DEVELOPER WRITE</span>
+                    <span className="flex items-center gap-2">
+                      <FileText className="w-3.5 h-3.5 text-m3-primary" />
+                      CleanCode.cs
+                    </span>
+                    <span className="text-m3-primary font-bold">исходный код разработчика</span>
                   </div>
-                  <pre className="p-4 overflow-x-auto text-[10.5px] font-mono leading-relaxed text-[#eae8ed] flex-1">
+                  <pre className="p-4 overflow-x-auto text-[11px] font-mono leading-relaxed text-[#eae8ed] max-h-[180px] overflow-y-auto scrollbox">
                     <code>{activeFeature.sourceCode}</code>
                   </pre>
                 </div>
 
-                {/* Visualizer C# Generated Code output */}
-                <div className="flex flex-col rounded-2xl overflow-hidden border-2 border-m3-primary/15 bg-black/60 relative">
+                {/* Visualizer C# Generated Code output (Row 2) */}
+                <div className="flex flex-col rounded-2xl overflow-hidden border-2 border-m3-primary/20 bg-black/60 relative">
                   <div className="bg-[#1c1a22] px-3.5 py-2 border-b border-m3-primary/15 flex items-center justify-between text-[10px] font-mono text-slate-400 select-none">
-                    <span>GeneratedCode.g.cs</span>
-                    <span className="text-emerald-400 font-bold">AUTO-GENERATED (0ms)</span>
+                    <span className="flex items-center gap-2">
+                      <Binary className="w-3.5 h-3.5 text-emerald-400" />
+                      GeneratedCode.g.cs
+                    </span>
+                    <span className="text-emerald-400 font-bold">сгенерированный код (0ms)</span>
                   </div>
-                  <pre className="p-4 overflow-x-auto text-[10.5px] font-mono leading-relaxed text-m3-onPrimaryContainer flex-1 opacity-90">
+                  <pre className="p-4 overflow-x-auto text-[11px] font-mono leading-relaxed text-m3-onPrimaryContainer max-h-[220px] overflow-y-auto scrollbox opacity-95">
                     <code>{activeFeature.generatedCode}</code>
                   </pre>
                 </div>

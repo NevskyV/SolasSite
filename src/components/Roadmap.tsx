@@ -279,7 +279,7 @@ export default function Roadmap() {
         {/* Mobile Info dialogue explanation */}
         <div className="mt-8 text-center sm:hidden">
           <p className="text-xs text-[#cac4d0]/60 font-mono">
-            — Кликните по модулям, чтобы получить информацию о плане выпуска.
+            Кликните по модулям, чтобы получить информацию о плане выпуска.
           </p>
         </div>
 
@@ -289,14 +289,14 @@ export default function Roadmap() {
             {clickedModule && (
               <div 
                 onClick={() => setClickedModule(null)}
-                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm sm:hidden"
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm sm:hidden"
               >
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.9, opacity: 0 }}
                   onClick={(e) => e.stopPropagation()}
-                  className="w-full max-w-sm rounded-3xl p-6 bg-m3-surface border border-white/10 text-left"
+                  className="w-full max-w-sm rounded-2xl p-6 bg-m3-surface border border-white/10 text-left"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="font-display font-bold text-lg text-white">
