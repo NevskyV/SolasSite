@@ -271,7 +271,7 @@ export default function EdlSandbox() {
                   СОСТАВ СУЩНОСТИ
                 </span>
                 <span className="text-[10px] font-mono px-2.5 py-1 rounded-lg bg-black/40 border-2 border-white/10 text-white font-bold">
-                  {selectedComponents.length} {selectedComponents.length === 1 ? 'компонент' : 'компонентов'}
+                  {'Кол-во компонентов: '}{selectedComponents.length}
                 </span>
               </div>
 
