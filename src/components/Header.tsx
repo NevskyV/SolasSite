@@ -67,7 +67,6 @@ function HeaderComponent({ activeTab, setActiveTab }: HeaderProps) {
               />
             )}
             <span className="flex items-center gap-1 sm:gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               О движке
             </span>
           </button>
@@ -89,7 +88,6 @@ function HeaderComponent({ activeTab, setActiveTab }: HeaderProps) {
               />
             )}
             <span className="flex items-center gap-1 sm:gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               Документация
             </span>
           </button>
