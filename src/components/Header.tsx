@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
-import { BookOpen, Download, Cpu, Sparkles, Github } from 'lucide-react';
+import React, { memo } from 'react';
+import { BookOpen, Sparkles, Github } from 'lucide-react';
 import { motion } from 'motion/react';
 import GameButton from './GameButton';
 
@@ -14,7 +14,7 @@ interface HeaderProps {
   onDownloadClick: () => void;
 }
 
-export default function Header({ activeTab, setActiveTab, onDownloadClick }: HeaderProps) {
+function HeaderComponent({ activeTab, setActiveTab }: HeaderProps) {
   return (
     <motion.header 
       initial={{ opacity: 0, y: -25 }}
@@ -35,6 +35,7 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
               src={`${import.meta.env.BASE_URL}logo_icon.svg`}
               className="w-full h-full object-contain select-none" 
               referrerPolicy="no-referrer"
+              alt="Solas Logo"
             />
           </div>
           <div className="flex flex-col">
@@ -111,3 +112,5 @@ export default function Header({ activeTab, setActiveTab, onDownloadClick }: Hea
     </motion.header>
   );
 }
+
+export default memo(HeaderComponent);

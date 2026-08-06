@@ -3,15 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Network, Lock, Unlock, ArrowRight, HelpCircle, AlertCircle, Play, CheckCircle2, ChevronRight, Layers, Shield } from 'lucide-react';
-import { SpaceNode, DependencyInjectNode } from '../types';
+import React, { useState, useMemo, memo } from 'react';
+import { motion } from 'motion/react';
+import { Network, Lock, Unlock, ArrowRight, HelpCircle, AlertCircle, Play, CheckCircle2, Layers, Shield } from 'lucide-react';
 import { SPACE_NODES, DEPENDENCY_NODES } from '../data';
 import GameCard from './GameCard';
 import GameButton from './GameButton';
 
-export default function SpaceHierarchy() {
+function SpaceHierarchyComponent() {
   const [activeTab, setActiveTab] = useState<'spaces' | 'injects'>('spaces');
   const [selectedSpaceId, setSelectedSpaceId] = useState<string>('child-tavern'); // Tavern
   const [isInjectRunning, setIsInjectRunning] = useState(false);
@@ -178,7 +177,7 @@ export default function SpaceHierarchy() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4 relative">
                       
                       {/* ROOT 1: TOWN BRANCH */}
-                      <div className="p-4 rounded-2xl bg-white/2 borde-2r border-white/5 flex flex-col items-center">
+                      <div className="p-4 rounded-2xl bg-white/2 border border-white/5 flex flex-col items-center">
                         <span className="text-[10px] font-mono text-m3-primary uppercase tracking-widest mb-3">Town Ветка</span>
                         
                         {/* Town Node */}
@@ -232,7 +231,7 @@ export default function SpaceHierarchy() {
                       </div>
 
                       {/* ROOT 2: DUNGEON BRANCH - isolated */}
-                      <div className="p-4 rounded-2xl bg-white/2 border-2 border-white/5 flex flex-col items-center">
+                      <div className="p-4 rounded-2xl bg-white/2 border border-white/5 flex flex-col items-center">
                         <span className="text-[10px] font-mono text-m3-tertiary uppercase tracking-widest mb-3">Dungeon Ветка</span>
 
                         {/* Dungeon Node */}
@@ -521,3 +520,5 @@ export default function SpaceHierarchy() {
     </section>
   );
 }
+
+export default memo(SpaceHierarchyComponent);

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Particle {
@@ -25,7 +25,7 @@ interface GameButtonProps {
   disabled?: boolean;
 }
 
-export default function GameButton({
+function GameButtonComponent({
   children,
   id,
   onClick,
@@ -34,6 +34,13 @@ export default function GameButton({
   disabled = false,
 }: GameButtonProps) {
   const [particles, setParticles] = useState<Particle[]>([]);
+  const timeoutRefs = useRef<number[]>([]);
+
+  useEffect(() => {
+    return () => {
+      timeoutRefs.current.forEach(t => clearTimeout(t));
+    };
+  }, []);
 
   // Choose colors based on the button theme
   const getColors = () => {
@@ -75,11 +82,11 @@ export default function GameButton({
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
-    // Generate 12-16 dynamic pixel/particle streams (Concept 1.2)
-    const newParticles: Particle[] = Array.from({ length: 14 }).map((_, i) => {
-      const angle = (Math.PI * 2 * i) / 14 + (Math.random() * 0.4 - 0.2);
-      const speed = 40 + Math.random() * 60; // distance they fly
-      const size = 3 + Math.floor(Math.random() * 4); // pixel size (3px - 7px)
+    // Generate dynamic pixel/particle streams
+    const newParticles: Particle[] = Array.from({ length: 12 }).map((_, i) => {
+      const angle = (Math.PI * 2 * i) / 12 + (Math.random() * 0.4 - 0.2);
+      const speed = 40 + Math.random() * 50; // distance they fly
+      const size = 3 + Math.floor(Math.random() * 3); // pixel size (3px - 6px)
       const color = colors.particleList[Math.floor(Math.random() * colors.particleList.length)];
       
       return {
@@ -87,7 +94,7 @@ export default function GameButton({
         x: clickX,
         y: clickY,
         tx: Math.cos(angle) * speed,
-        ty: Math.sin(angle) * speed - (15 + Math.random() * 20), // slight upward pull
+        ty: Math.sin(angle) * speed - (15 + Math.random() * 20),
         size,
         color,
       };
@@ -95,10 +102,11 @@ export default function GameButton({
 
     setParticles((prev) => [...prev, ...newParticles]);
 
-    // Cleanup particles after animation is completed to keep DOM lightweight
-    setTimeout(() => {
+    // Cleanup particles after animation is completed
+    const t = window.setTimeout(() => {
       setParticles((prev) => prev.filter((p) => !newParticles.some((np) => np.id === p.id)));
     }, 850);
+    timeoutRefs.current.push(t);
 
     // Call upstream click callback
     if (onClick) {
@@ -116,7 +124,7 @@ export default function GameButton({
           boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
         }}
         whileTap={{ 
-          scale: 0.94, // Tactile game controller button press effect (Concept 1.2)
+          scale: 0.94,
           y: 1,
         }}
         transition={{ 
@@ -133,7 +141,7 @@ export default function GameButton({
         {children}
       </motion.button>
 
-      {/* Render flying interactive particles absolutely over/outside the button boundaries (Concept 1.2) */}
+      {/* Render flying interactive particles absolutely over/outside the button boundaries */}
       <div className="absolute inset-0 pointer-events-none overflow-visible z-50">
         <AnimatePresence>
           {particles.map((p) => (
@@ -156,14 +164,14 @@ export default function GameButton({
               exit={{ opacity: 0 }}
               transition={{ 
                 duration: 0.7, 
-                ease: [0.1, 0.8, 0.25, 1] // swift explosion profile then slow drag
+                ease: [0.1, 0.8, 0.25, 1]
               }}
               style={{
                 position: 'absolute',
                 width: p.size,
                 height: p.size,
                 backgroundColor: p.color,
-                borderRadius: Math.random() > 0.5 ? '1px' : '0px', // retro raw square/pixel aesthetics
+                borderRadius: Math.random() > 0.5 ? '1px' : '0px',
                 boxShadow: `0 0 6px ${p.color}`,
               }}
             />
@@ -173,3 +181,5 @@ export default function GameButton({
     </div>
   );
 }
+
+export default memo(GameButtonComponent);

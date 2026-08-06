@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { motion, AnimatePresence } from 'motion/react';
@@ -29,7 +29,7 @@ interface CodeBlockProps {
   value: string;
 }
 
-function CodeBlock({ language, value }: CodeBlockProps) {
+const CodeBlock = memo(function CodeBlock({ language, value }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -64,13 +64,45 @@ function CodeBlock({ language, value }: CodeBlockProps) {
       </pre>
     </div>
   );
-}
+});
 
-export default function DocViewer() {
-  const [categories, setCategories] = useState<DocCategory[]>([]);
+// In-memory markdown cache for instant tab navigation without refetches
+const markdownCache = new Map<string, string>();
+let cachedDocCategories: DocCategory[] | null = null;
+
+// Static markdown components map to prevent recreation on every render
+const markdownComponents = {
+  h1: ({node, ...props}: any) => <h1 className="text-3xl font-display font-bold text-white mb-6 border-b border-white/10 pb-3" {...props} />,
+  h2: ({node, ...props}: any) => <h2 className="text-2xl font-display font-bold text-m3-primary mt-8 mb-4 border-b border-white/5 pb-2" {...props} />,
+  h3: ({node, ...props}: any) => <h3 className="text-xl font-display font-semibold text-m3-tertiary mt-6 mb-3" {...props} />,
+  p: ({node, ...props}: any) => <p className="text-sm text-[#cac4d0] leading-relaxed mb-4" {...props} />,
+  ul: ({node, ...props}: any) => <ul className="list-disc pl-5 mb-4 space-y-1.5 text-sm text-[#cac4d0]" {...props} />,
+  ol: ({node, ...props}: any) => <ol className="list-decimal pl-5 mb-4 space-y-1.5 text-sm text-[#cac4d0]" {...props} />,
+  li: ({node, ...props}: any) => <li className="marker:text-m3-primary text-sm text-[#cac4d0]" {...props} />,
+  strong: ({node, ...props}: any) => <strong className="font-bold text-m3-tertiary" {...props} />,
+  table: ({node, ...props}: any) => <div className="overflow-x-auto my-6"><table className="w-full text-sm text-[#cac4d0] border-collapse border border-white/10" {...props} /></div>,
+  th: ({node, ...props}: any) => <th className="border border-white/10 p-3 bg-white/5 font-semibold" {...props} />,
+  td: ({node, ...props}: any) => <td className="border border-white/10 p-3" {...props} />,
+  code: ({node, className, children, ...props}: any) => {
+    const match = /language-(\w+)/.exec(className || '');
+    const codeContent = String(children).replace(/\n$/, '');
+    if (!match) {
+      return <code className="bg-white/5 text-m3-primary font-mono text-xs px-0 py-0 rounded border border-white/5" {...props}>{children}</code>;
+    }
+    return <CodeBlock language={match[1]} value={codeContent} />;
+  },
+  blockquote: ({node, ...props}: any) => (
+    <blockquote className="border-l-4 border-m3-primary bg-m3-primaryContainer/10 p-2 rounded-r-2xl text-m3-onPrimaryContainer my-1 text-sm italic shadow-inner" {...props} />
+  )
+};
+
+const remarkPluginsList = [remarkGfm];
+
+function DocViewerComponent() {
+  const [categories, setCategories] = useState<DocCategory[]>(cachedDocCategories || []);
   const [selectedPageId, setSelectedPageId] = useState<string>('Introduction');
-  const [markdown, setMarkdown] = useState<string>('');
-  const [isInitLoading, setIsInitLoading] = useState<boolean>(true);
+  const [markdown, setMarkdown] = useState<string>(() => markdownCache.get('Introduction') || '');
+  const [isInitLoading, setIsInitLoading] = useState<boolean>(() => !markdownCache.has('Introduction'));
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showToast, setShowToast] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -80,14 +112,20 @@ export default function DocViewer() {
     'Пространства и Связи': true
   });
 
-  // Load documentation structural folders (index.json)
+  // Load documentation structural folders (index.json) with caching
   useEffect(() => {
+    if (cachedDocCategories) {
+      setCategories(cachedDocCategories);
+      return;
+    }
+
     fetch(`${import.meta.env.BASE_URL}docs/index.json`)
       .then(res => {
         if (!res.ok) throw new Error('Offline mode or missing public directory index.json');
         return res.json();
       })
       .then((data: DocCategory[]) => {
+        cachedDocCategories = data;
         setCategories(data);
       })
       .catch((err) => {
@@ -95,24 +133,32 @@ export default function DocViewer() {
       });
   }, []);
 
-  // Fetch or load fallback content whenever a page selection triggers
+  // Fetch or load cached content whenever a page selection triggers
   useEffect(() => {
-    // Scroll content panel to top smoothly
     const docPanel = document.getElementById('docs-view-scroll-canvas');
     if (docPanel) docPanel.scrollTop = 0;
 
-    // Load from public directory with direct fallback
-    fetch(`${import.meta.env.BASE_URL}/docs/${selectedPageId}.md`)
+    // Check memory cache first
+    const cached = markdownCache.get(selectedPageId);
+    if (cached) {
+      setMarkdown(cached);
+      setIsInitLoading(false);
+      return;
+    }
+
+    // Load from public directory with cache storage
+    fetch(`${import.meta.env.BASE_URL}docs/${selectedPageId}.md`)
       .then(res => {
         if (!res.ok) throw new Error('Network file failed, fallback to offline embedded documentation');
         return res.text();
       })
       .then(text => {
+        markdownCache.set(selectedPageId, text);
         setMarkdown(text);
         setIsInitLoading(false);
       })
       .catch((err) => {
-        console.info(`Fetched failed for ${selectedPageId}.md, rendering local high-fidelity copy.`, err);
+        console.info(`Fetched failed for ${selectedPageId}.md, rendering local copy.`, err);
         setIsInitLoading(false);
       });
   }, [selectedPageId]);
@@ -189,7 +235,7 @@ export default function DocViewer() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96, y: -10 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
             className="flex flex-col items-center justify-center py-36 text-center"
           >
             {/* Aesthetic Cosmic Ring Spinner */}
@@ -216,7 +262,7 @@ export default function DocViewer() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="grid grid-cols-1 md:grid-cols-12 items-start relative gap-6 md:gap-8"
           >
             {/* Dynamic Slide Toast Dialogue: M3 Expressive Alert */}
@@ -273,12 +319,7 @@ export default function DocViewer() {
                 </div>
 
                 {/* Folders navigation list */}
-                <motion.nav 
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="space-y-4 max-h-[calc(100vh-300px)] overflow-y-auto pr-1"
-                >
+                <nav className="space-y-4 max-h-[calc(100vh-300px)] overflow-y-auto pr-1">
                   {filteredCategories.length === 0 ? (
                     <div className="text-xs font-mono text-neutral-500 text-center py-6 border border-dashed border-white/5 rounded-xl">
                       Разделы не найдены
@@ -336,7 +377,7 @@ export default function DocViewer() {
                       );
                     })
                   )}
-                </motion.nav>
+                </nav>
               </div>
 
               {/* Action controls footer */}
@@ -381,37 +422,12 @@ export default function DocViewer() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.18, ease: 'easeInOut' }}
+                      transition={{ duration: 0.15, ease: 'easeInOut' }}
                       className="markdown-body"
                     >
                       <Markdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          h1: ({node, ...props}) => <h1 className="text-3xl font-display font-bold text-white mb-6 border-b border-white/10 pb-3" {...props} />,
-                          h2: ({node, ...props}) => <h2 className="text-2xl font-display font-bold text-m3-primary mt-8 mb-4 border-b border-white/5 pb-2" {...props} />,
-                          h3: ({node, ...props}) => <h3 className="text-xl font-display font-semibold text-m3-tertiary mt-6 mb-3" {...props} />,
-                          p: ({node, ...props}) => <p className="text-sm text-[#cac4d0] leading-relaxed mb-4" {...props} />,
-                          ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-4 space-y-1.5 text-sm text-[#cac4d0]" {...props} />,
-                          ol: ({node, ...props}) => <ol className="list-decimal pl-5 mb-4 space-y-1.5 text-sm text-[#cac4d0]" {...props} />,
-                          li: ({node, ...props}) => <li className="marker:text-m3-primary text-sm text-[#cac4d0]" {...props} />,
-                          strong: ({node, ...props}) => <strong className="font-bold text-m3-tertiary" {...props} />,
-                          table: ({node, ...props}) => <div className="overflow-x-auto my-6"><table className="w-full text-sm text-[#cac4d0] border-collapse border border-white/10" {...props} /></div>,
-                          th: ({node, ...props}) => <th className="border border-white/10 p-3 bg-white/5 font-semibold" {...props} />,
-                          td: ({node, ...props}) => <td className="border border-white/10 p-3" {...props} />,
-                          code: ({node, className, children, ...props}: any) => {
-                            const match = /language-(\w+)/.exec(className || '');
-                            const codeContent = String(children).replace(/\n$/, '');
-                            if (!match) {
-                              return <code className="bg-white/5 text-m3-primary font-mono text-xs px-0 py-0 rounded border border-white/5" {...props}>{children}</code>;
-                            }
-                            return (
-                              <CodeBlock language={match[1]} value={codeContent} />
-                            );
-                          },
-                          blockquote: ({node, ...props}) => (
-                            <blockquote className="border-l-4 border-m3-primary bg-m3-primaryContainer/10 p-2 rounded-r-2xl text-m3-onPrimaryContainer my-1 text-sm italic shadow-inner" {...props} />
-                          )
-                        }}
+                        remarkPlugins={remarkPluginsList}
+                        components={markdownComponents}
                       >
                         {markdown}
                       </Markdown>
@@ -425,7 +441,7 @@ export default function DocViewer() {
                     {nextPage && (
                       <button 
                         onClick={() => setSelectedPageId(nextPage.id)}
-                        className="flex items-center gap-2 text-m3-primary text-right hover:text-white transition-colors"
+                        className="flex items-center gap-2 text-m3-primary text-right hover:text-white transition-colors cursor-pointer"
                       >
                         Следующая страница: {nextPage.title}
                         <ArrowRight className="w-4 h-4" />
@@ -442,3 +458,5 @@ export default function DocViewer() {
     </div>
   );
 }
+
+export default memo(DocViewerComponent);

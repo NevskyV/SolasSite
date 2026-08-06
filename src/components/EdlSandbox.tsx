@@ -3,20 +3,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Database, Shield, Cpu, Activity, Play, Settings } from 'lucide-react';
+import { Plus, Trash2, Database, Cpu, Activity, Settings } from 'lucide-react';
 import { EdlComponent, EntityType } from '../types';
 import { EDL_COMPONENTS_POOL } from '../data';
 import GameCard from './GameCard';
 
-export default function EdlSandbox() {
+function EdlSandboxComponent() {
   const [selectedComponents, setSelectedComponents] = useState<EdlComponent[]>([
     EDL_COMPONENTS_POOL[0], // TransformData
     EDL_COMPONENTS_POOL[2], // HealthData
   ]);
-
-  const [isRunningSim, setIsRunningSim] = useState(false);
 
   // Determine entity type based on composition
   const entityType = useMemo((): EntityType | 'Empty' => {
@@ -426,3 +424,5 @@ export default function EdlSandbox() {
     </section>
   );
 }
+
+export default memo(EdlSandboxComponent);

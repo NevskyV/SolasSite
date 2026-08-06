@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import EdlSandbox from './components/EdlSandbox';
@@ -11,12 +11,13 @@ import SpaceHierarchy from './components/SpaceHierarchy';
 import SourceGenVisualizer from './components/SourceGenVisualizer';
 import Roadmap from './components/Roadmap';
 import Support from './components/Support';
-import DocViewer from './components/DocViewer';
 import WavyStripes from './components/WavyStripes';
 import MaterialBackground from './components/MaterialBackground';
+
+const DocViewer = React.lazy(() => import('./components/DocViewer'));
 import { initializeTheme, applyThemeProperties } from './lib/theme';
 import { motion, AnimatePresence } from 'motion/react';
-import { Download, CheckCircle2, X, Play, BookOpen, AlertCircle, Copy, Check } from 'lucide-react';
+import { Download, CheckCircle2, X, Copy } from 'lucide-react';
 import GameButton from './components/GameButton';
 
 export default function App() {
@@ -61,29 +62,19 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
 
-  const handleDownloadTrigger = () => {
+  const handleDownloadTrigger = useCallback(() => {
     setShowDownloadModal(true);
     setDownloadSuccess(false);
-  };
+  }, []);
 
-  const handleConfirmDownload = () => {
-    setDownloadSuccess(true);
-    setTimeout(() => {
-      // Simulate static zip generation and download
-      const link = document.createElement('a');
-      link.href = '#';
-      link.setAttribute('download', 'Engine_SDK_v0.1.zip');
-      document.body.appendChild(link);
-      // Let the user know the code is perfectly executing
-      console.log('Initiated mock C# engine download archive.');
-      document.body.removeChild(link);
-    }, 1000);
-  };
+  const handleDocsClick = useCallback(() => {
+    setActiveTab('docs');
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0b090f] text-[#ede8f5] selection:bg-m3-primary selection:text-m3-onPrimary relative font-sans overflow-x-clip">
       
-      {/* Expressive Material Design floating shapes + simple unbuggy gradient loops background */}
+      {/* Expressive Material Design floating shapes + high-performance 2D Canvas background */}
       <MaterialBackground activeTab={activeTab} />
 
       <div className="relative z-10 flex flex-col min-h-screen">
@@ -113,7 +104,7 @@ export default function App() {
                 transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
               >
                 <Hero 
-                  onDocsClick={() => setActiveTab('docs')} 
+                  onDocsClick={handleDocsClick} 
                   onDownloadClick={handleDownloadTrigger} 
                   engineVersion={engineVersion}
                 />
@@ -188,6 +179,7 @@ export default function App() {
                         src={`${import.meta.env.BASE_URL}logo_icon.svg`} 
                         className="w-full h-full object-contain select-none" 
                         referrerPolicy="no-referrer"
+                        alt="Solas Logo"
                       />
                     </div>
                     <span className="font-display font-semibold text-sm text-white">Solas C# Game Engine</span>
@@ -207,7 +199,13 @@ export default function App() {
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
               {/* DOCUMENTATION MULTI-PAGE MARKDOWN VIEWER */}
-              <DocViewer />
+              <React.Suspense fallback={
+                <div className="min-h-[60vh] flex items-center justify-center">
+                  <div className="w-8 h-8 border-2 border-m3-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+              }>
+                <DocViewer />
+              </React.Suspense>
             </motion.div>
           )}
         </AnimatePresence>

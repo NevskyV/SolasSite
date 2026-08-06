@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { motion } from 'motion/react';
-import { Heart, Send, CheckCircle2, QrCode, Sparkles, ExternalLink } from 'lucide-react';
+import { Heart, Send, QrCode } from 'lucide-react';
 import GameButton from './GameButton';
 
-export default function Support() {
-  const [qrError, setQrError] = useState(false);
+function SupportComponent() {
+  const [, setQrError] = useState(false);
   const [tgError, setTgError] = useState(false);
 
   return (
@@ -55,13 +55,13 @@ export default function Support() {
 
               {/* Polished custom geometric SVG QR mockup or Real Image */}
               <div className="bg-white p-4 rounded-2xl shadow-inner mb-4 w-44 h-44 flex items-center justify-center relative overflow-hidden">
-                {<img
-                    src={`${import.meta.env.BASE_URL}qr.png`} 
-                    alt="Донат QR" 
-                    onError={() => setQrError(true)} 
-                    className="w-full h-full object-contain select-none" 
-                    referrerPolicy="no-referrer"
-                  />}
+                <img
+                  src={`${import.meta.env.BASE_URL}qr.png`} 
+                  alt="Донат QR" 
+                  onError={() => setQrError(true)} 
+                  className="w-full h-full object-contain select-none" 
+                  referrerPolicy="no-referrer"
+                />
 
                 {/* Scan Overlay Effect */}
                 <div className="absolute inset-x-0 h-0.5 bg-m3-primary shadow-[0_0_8px_#D0BCFF] animate-[bounce_3s_ease-in-out_infinite]" />
@@ -181,3 +181,5 @@ export default function Support() {
     </section>
   );
 }
+
+export default memo(SupportComponent);

@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Cpu, Zap, Binary, Layers, CheckCircle2, RefreshCw, FileText, ArrowRight } from 'lucide-react';
+import { Cpu, Zap, Binary, CheckCircle2, RefreshCw, FileText, ArrowRight } from 'lucide-react';
 import GameCard from './GameCard';
 import GameButton from './GameButton';
 
@@ -21,25 +21,20 @@ interface GeneratorFeature {
   generatedCode: string;
 }
 
-export default function SourceGenVisualizer() {
-  const [activeFeatureId, setActiveFeatureId] = useState<string>('serialization');
-  const [isCompiling, setIsCompiling] = useState(false);
-  const [compileProgress, setCompileProgress] = useState(0);
-
-  const features: GeneratorFeature[] = [
-    {
-      id: 'serialization',
-      title: 'Сериализация',
-      shortDesc: 'Авто генерация сериалайзеров для данных и референсов',
-      icon: <Binary className="w-5 h-5 text-m3-tertiary" />,
-      colorClass: 'border-m3-tertiary/20 bg-m3-tertiaryContainer/5 hover:border-m3-tertiary/40 text-m3-tertiary',
-      badgeClass: 'bg-m3-tertiaryContainer text-m3-onTertiaryContainer',
-      details: [
-        'Позволяет делать быстрые локации (Space) с мгновенным сохранением состояния.',
-        'Избавляет от boilerplate кода ввиде отдельного сериалайзера для каждой даты (но при желании можно такой написать, тогда генерация для данного скрипта не будет произведена).',
-        'Не зависит от выбраного сериализатора.',
-      ],
-      sourceCode: `public class TextData : IData
+const features: GeneratorFeature[] = [
+  {
+    id: 'serialization',
+    title: 'Сериализация',
+    shortDesc: 'Авто генерация сериалайзеров для данных и референсов',
+    icon: <Binary className="w-5 h-5 text-m3-tertiary" />,
+    colorClass: 'border-m3-tertiary/20 bg-m3-tertiaryContainer/5 hover:border-m3-tertiary/40 text-m3-tertiary',
+    badgeClass: 'bg-m3-tertiaryContainer text-m3-onTertiaryContainer',
+    details: [
+      'Позволяет делать быстрые локации (Space) с мгновенным сохранением состояния.',
+      'Избавляет от boilerplate кода ввиде отдельного сериалайзера для каждой даты (но при желании можно такой написать, тогда генерация для данного скрипта не будет произведена).',
+      'Не зависит от выбраного сериализатора.',
+    ],
+    sourceCode: `public class TextData : IData
 {
     public DataProperty<OtherLogic> OtherLogic = new();
     public DataProperty<OtherData> OtherTextData = new();
@@ -47,7 +42,7 @@ export default function SourceGenVisualizer() {
     public DataProperty<TextAsset> TextAsset = new();
 }
 `,
-      generatedCode: `public sealed class TextDataSerializer : ICustomSerializer<ExampleGame.Assets.Scripts.TextData>
+    generatedCode: `public sealed class TextDataSerializer : ICustomSerializer<ExampleGame.Assets.Scripts.TextData>
 {
     public void Write(ExampleGame.Assets.Scripts.TextData value, FileStream stream, Serializer serializer, string name = null)
     {
@@ -78,26 +73,26 @@ export default function SourceGenVisualizer() {
         return result;
     }
 }`
-    },
-    {
-      id: 'autoinject',
-      title: 'Сверхбыстрый Автоинжект',
-      shortDesc: 'Компиляционное внедрение зависимостей без рантайм-контейнеров',
-      icon: <Zap className="w-5 h-5 text-m3-primary" />,
-      colorClass: 'border-m3-primary/20 bg-m3-primaryContainer/5 hover:border-m3-primary/40 text-m3-primary',
-      badgeClass: 'bg-m3-primaryContainer text-m3-onPrimaryContainer',
-      details: [
-        'Инициализация классов происходит со скоростью прямого вызова.',
-        'Никакого оверхеда на поиск типов в рантайме.',
-        'Ошибки несовпадения зависимостей отлавливаются прямо на этапе сборки C#.',
-        'Интегрировано в древовидные иерархии пространств по умолчанию.'
-      ],
-      sourceCode: `public partial class TextLogic : Logic, IInitializable
+  },
+  {
+    id: 'autoinject',
+    title: 'Сверхбыстрый Автоинжект',
+    shortDesc: 'Компиляционное внедрение зависимостей без рантайм-контейнеров',
+    icon: <Zap className="w-5 h-5 text-m3-primary" />,
+    colorClass: 'border-m3-primary/20 bg-m3-primaryContainer/5 hover:border-m3-primary/40 text-m3-primary',
+    badgeClass: 'bg-m3-primaryContainer text-m3-onPrimaryContainer',
+    details: [
+      'Инициализация классов происходит со скоростью прямого вызова.',
+      'Никакого оверхеда на поиск типов в рантайме.',
+      'Ошибки несовпадения зависимостей отлавливаются прямо на этапе сборки C#.',
+      'Интегрировано в древовидные иерархии пространств по умолчанию.'
+    ],
+    sourceCode: `public partial class TextLogic : Logic, IInitializable
 {
     [AutoInject] private OtherLogic _otherLogic;
     [Inject] public OtherLogic OtherOtherLogic;
 }`,
-      generatedCode: `public partial class TextLogic
+    generatedCode: `public partial class TextLogic
 {
     public override void WriteInject(FileStream stream, Entity entity = null)
     {
@@ -131,21 +126,21 @@ export default function SourceGenVisualizer() {
     }
 }
 `
-    },
-    {
-      id: 'update',
-      title: 'Эффективные Апдейты',
-      shortDesc: 'Однопоточные и многопоточные обновления без виртуального оверхеда',
-      icon: <Cpu className="w-5 h-5 text-emerald-400" />,
-      colorClass: 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-400/40 text-emerald-400',
-      badgeClass: 'bg-emerald-950 text-emerald-300 border-2 border-emerald-500/20',
-      details: [
-        'Преобразует разрозненные абстрактные вызовы Update() в линейный плоский цикл.',
-        'Исключает виртуальный оверхед и путем генерации Update Runners под конкретные типы.',
-        'Умный генератор распараллеливает независимые сущности в Parallel на все ядра CPU.',
-        'Безумные 1,000,000+ активных сущностей со стабильными 500+ FPS.'
-      ],
-      sourceCode: `[Update(Parallel = true)]
+  },
+  {
+    id: 'update',
+    title: 'Эффективные Апдейты',
+    shortDesc: 'Однопоточные и многопоточные обновления без виртуального оверхеда',
+    icon: <Cpu className="w-5 h-5 text-emerald-400" />,
+    colorClass: 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-400/40 text-emerald-400',
+    badgeClass: 'bg-emerald-950 text-emerald-300 border-2 border-emerald-500/20',
+    details: [
+      'Преобразует разрозненные абстрактные вызовы Update() в линейный плоский цикл.',
+      'Исключает виртуальный оверхед и путем генерации Update Runners под конкретные типы.',
+      'Умный генератор распараллеливает независимые сущности в Parallel на все ядра CPU.',
+      'Безумные 1,000,000+ активных сущностей со стабильными 500+ FPS.'
+    ],
+    sourceCode: `[Update(Parallel = true)]
 public partial class TextLogic : Logic, IInitializable
 {
     public TextData Data;
@@ -155,7 +150,7 @@ public partial class TextLogic : Logic, IInitializable
         //Console.WriteLine(Data.Text.Value);
     }
 }`,
-      generatedCode: `namespace Solas.Generated
+    generatedCode: `namespace Solas.Generated
 {
     internal class TextLogic_UpdateRunner : Solas.Interfaces.IUpdateRunner
     {
@@ -185,18 +180,31 @@ public partial class TextLogic : Logic, IInitializable
         }
     }
 }`
-    }
-  ];
+  }
+];
+
+function SourceGenVisualizerComponent() {
+  const [activeFeatureId, setActiveFeatureId] = useState<string>('serialization');
+  const [isCompiling, setIsCompiling] = useState(false);
+  const [compileProgress, setCompileProgress] = useState(0);
+  const timerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
 
   const handleSimulateCompile = () => {
     if (isCompiling) return;
     setIsCompiling(true);
     setCompileProgress(0);
     
-    const interval = setInterval(() => {
+    timerRef.current = window.setInterval(() => {
       setCompileProgress(prev => {
         if (prev >= 100) {
-          clearInterval(interval);
+          if (timerRef.current) clearInterval(timerRef.current);
+          timerRef.current = null;
           setTimeout(() => {
             setIsCompiling(false);
           }, 800);
@@ -411,3 +419,5 @@ public partial class TextLogic : Logic, IInitializable
     </section>
   );
 }
+
+export default memo(SourceGenVisualizerComponent);

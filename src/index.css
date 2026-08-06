@@ -251,6 +251,19 @@
   animation: float 6s ease-in-out infinite;
 }
 
+@keyframes wavy-slide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-180px, 0, 0);
+  }
+}
+
+.animate-wavy-slide {
+  animation: wavy-slide infinite linear;
+}
+
 .markdown-body {
   font-family: var(--font-sans);
   line-height: 1.75;

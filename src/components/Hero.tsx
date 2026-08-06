@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Download, BookOpen, Cpu, Shield, RefreshCw } from 'lucide-react';
 import { motion } from 'motion/react';
 import GameCard from './GameCard';
@@ -24,7 +24,7 @@ function Sparkle() {
   );
 }
 
-export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: HeroProps) {
+function HeroComponent({ onDocsClick, onDownloadClick, engineVersion }: HeroProps) {
   return (
     <section className="relative overflow-hidden pt-8 pb-20 md:pt-50 md:pb-28 flex flex-col items-center text-center px-4">
       {/* Стили Crystal Glow с единственной базой и анимацией звёздочек */}
@@ -280,3 +280,5 @@ export default function Hero({ onDocsClick, onDownloadClick, engineVersion }: He
     </section>
   );
 }
+
+export default memo(HeroComponent);

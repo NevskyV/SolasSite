@@ -1,13 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { ROADMAP_MODULES } from '../data';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { RoadmapModule } from '../types';
 
-export default function Roadmap() {
+function RoadmapComponent() {
   const [hoveredModuleId, setHoveredModuleId] = useState<string | null>(null);
-  const [hoveredRect, setHoveredRect] = useState<{ top: number; left: number; width: number } | null>(null);
   const [clickedModule, setClickedModule] = useState<RoadmapModule | null>(null);
 
   // Grab-to-scroll horizontal container logic
@@ -25,39 +24,29 @@ export default function Roadmap() {
   const scrollSpeedRef = useRef<number>(0);
   const rafIdRef = useRef<number | null>(null);
 
-  // 1. Состояние для точных координат портала
+  // Coordinates for popup portal
   const [popupCoords, setPopupCoords] = useState<{ top: number; left: number } | null>(null);
 
-  React.useLayoutEffect(() => {
-    if (!hoveredModuleId) {
-      setPopupCoords(null);
-      return;
-    }
+  // Calculate popup position on hover without continuous RAF loop
+  const updatePopupPosition = useCallback((moduleId: string) => {
+    const ballEl = document.getElementById(`roadmap-ball-${moduleId}`);
+    if (!ballEl) return;
+    const ballRect = ballEl.getBoundingClientRect();
+    setPopupCoords({
+      top: ballRect.top - 12,
+      left: ballRect.left + ballRect.width / 2,
+    });
+  }, []);
 
-    let animationFrameId: number;
+  const handleModuleMouseEnter = (moduleId: string) => {
+    if (isDragging) return;
+    setHoveredModuleId(moduleId);
+    updatePopupPosition(moduleId);
+  };
 
-    const updatePosition = () => {
-      // Цепляемся именно к шарику!
-      const ballEl = document.getElementById(`roadmap-ball-${hoveredModuleId}`);
-      if (!ballEl) return;
-
-      const ballRect = ballEl.getBoundingClientRect();
-
-      setPopupCoords({
-        // Фиксированный отступ в 12px НАД шариком
-        top: ballRect.top - 12,
-        left: ballRect.left + ballRect.width / 2,
-      });
-
-      animationFrameId = requestAnimationFrame(updatePosition);
-    };
-
-    updatePosition();
-
-    return () => {
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    };
-  }, [hoveredModuleId]);
+  const handleModuleMouseLeave = () => {
+    setHoveredModuleId(null);
+  };
 
   const startEdgeScrollLoop = () => {
     if (rafIdRef.current) return;
@@ -106,7 +95,7 @@ export default function Roadmap() {
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return;
     setIsDragging(true);
-    setHoveredModuleId(null); // Скрываем попап при перетаскивании
+    setHoveredModuleId(null); // Hide popup when dragging
     setStartX(e.pageX - scrollRef.current.offsetLeft);
     scrollRef.current.style.scrollBehavior = 'auto';
     setScrollLeft(scrollRef.current.scrollLeft);
@@ -188,7 +177,7 @@ export default function Roadmap() {
             onMouseLeave={handleMouseUp}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
-            onScroll={() => setHoveredModuleId(null)} // Скрываем попап при скролле
+            onScroll={() => setHoveredModuleId(null)}
             className={`overflow-x-auto overflow-y-visible -px-40 pt-5 scroll-smooth select-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative ${
               isDragging ? 'cursor-grabbing' : 'cursor-grab'
             }`}
@@ -216,8 +205,8 @@ export default function Roadmap() {
                     key={module.id}
                     id={`roadmap-point-${module.id}`}
                     className="w-44 flex-shrink-0 flex flex-col items-center relative z-10"
-                    onMouseEnter={() => !isDragging && setHoveredModuleId(module.id)}
-                    onMouseLeave={() => setHoveredModuleId(null)}
+                    onMouseEnter={() => handleModuleMouseEnter(module.id)}
+                    onMouseLeave={handleModuleMouseLeave}
                     onClick={() => {
                       if (hasMoved) return;
                       if (window.innerWidth < 640) setClickedModule(module);
@@ -283,19 +272,17 @@ export default function Roadmap() {
         {typeof document !== 'undefined' && createPortal(
           <AnimatePresence>
             {activeHoveredModule && popupCoords && (
-              /* 1. ВНЕШНИЙ DIV: Отвечает ТОЛЬКО за фиксированную позицию и translate(-50%, -100%) */
               <div
                 key={activeHoveredModule.id}
                 style={{
                   position: 'fixed',
                   top: `${popupCoords.top}px`,
                   left: `${popupCoords.left}px`,
-                  transform: 'translate(-50%, -100%)', // Нижний край попапа ТЕПЕРЬ МЕРТВО зафиксирован!
+                  transform: 'translate(-50%, -100%)',
                   zIndex: 9999,
                 }}
                 className="hidden md:block pointer-events-none"
               >
-                {/* 2. ВНУТРЕННИЙ MOTION.DIV: Отвечает ТОЛЬКО за красивую анимацию */ }
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -304,7 +291,7 @@ export default function Roadmap() {
                   className="w-60 p-4 rounded-2xl m3-glass border border-m3-primary/20 shadow-2xl text-left relative"
                   id={`timeline-popup-${activeHoveredModule.id}`}
                 >
-                  {/* Стрелочка снизу (всегда на одном месте) */}
+                  {/* Bottom triangle pointer */}
                   <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#1d1b20] border-r border-b border-m3-primary/15 rotate-45" />
 
                   <h4 className="font-display font-bold text-sm text-white mb-1.5">
@@ -386,3 +373,5 @@ export default function Roadmap() {
     </section>
   );
 }
+
+export default memo(RoadmapComponent);
