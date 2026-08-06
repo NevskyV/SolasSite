@@ -5,7 +5,7 @@
 
 import React, { useState, useMemo, memo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Database, Cpu, Activity, Settings } from 'lucide-react';
+import { Plus, Trash2, Database, Cpu, Component, Settings } from 'lucide-react';
 import { EdlComponent, EntityType } from '../types';
 import { EDL_COMPONENTS_POOL } from '../data';
 import GameCard from './GameCard';
@@ -220,7 +220,7 @@ function EdlSandboxComponent() {
                 {entityType === 'Empty' && <Settings className="w-10 h-10 text-neutral-600 animate-spin" />}
                 {entityType === 'Config' && <Database className="w-12 h-12 text-m3-tertiary" />}
                 {entityType === 'System' && <Cpu className="w-12 h-12 text-m3-primary" />}
-                {entityType === 'Composition' && <Activity className="w-12 h-12 text-teal-400" />}
+                {entityType === 'Composition' && <Component className="w-12 h-12 text-teal-400" />}
 
                 {/* Subtitle dynamic display */}
                 <span className="text-xs font-mono font-bold text-white mt-3 uppercase tracking-wider block">

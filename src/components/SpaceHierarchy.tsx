@@ -5,7 +5,7 @@
 
 import React, { useState, useMemo, memo } from 'react';
 import { motion } from 'motion/react';
-import { Network, Lock, Unlock, ArrowRight, HelpCircle, AlertCircle, Play, CheckCircle2, Layers, Shield } from 'lucide-react';
+import { Network, Lock, Unlock, ArrowRight, HelpCircle, AlertCircle, Play, CheckCircle2, Layers } from 'lucide-react';
 import { SPACE_NODES, DEPENDENCY_NODES } from '../data';
 import GameCard from './GameCard';
 import GameButton from './GameButton';
@@ -78,7 +78,7 @@ function SpaceHierarchyComponent() {
             Изоляция локаций и зависимости
           </h2>
           <p className="mt-4 text-m text-[#cac4d0] max-w-xl mx-auto">
-            Посмотрите, как движок изолирует игровые пространства в памяти и разрешает зависимости компонентов без лишней связанности.
+            На этом демо видно, как движок изолирует игровые пространства в памяти и разрешает зависимости компонентов без лишнего бойлерплейта.
           </p>
         </div>
 
@@ -101,7 +101,7 @@ function SpaceHierarchyComponent() {
               )}
               <span className="relative z-10 flex items-center gap-2">
                 <Layers className="w-4 h-4" />
-                Иерархия Пространств (Space Isolation)
+                Иерархия Пространств
               </span>
             </button>
             <button
@@ -120,7 +120,7 @@ function SpaceHierarchyComponent() {
               )}
               <span className="relative z-10 flex items-center gap-2">
                 <Network className="w-4 h-4" />
-                Граф Зависимостей (Dependency Injects)
+                Граф Зависимостей
               </span>
             </button>
           </div>
@@ -481,7 +481,7 @@ function SpaceHierarchyComponent() {
               <GameCard id="dependency-inspector-card" accent="primary" className="lg:col-span-5 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-4">
-                    <Shield className="w-5 h-5 text-m3-primary" />
+                    <HelpCircle className="w-5 h-5 text-m3-primary" />
                     <h3 className="font-display font-semibold text-lg text-white">
                       Как работает [AutoInject]
                     </h3>

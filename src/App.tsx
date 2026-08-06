@@ -182,7 +182,7 @@ export default function App() {
                         alt="Solas Logo"
                       />
                     </div>
-                    <span className="font-display font-semibold text-sm text-white">Solas C# Game Engine</span>
+                    <span className="font-display font-semibold text-sm text-white">Solas Game Engine</span>
                   </div>
                   <p className="text-xs justify-end text-[#cac4d0]/60 max-w-sm text-right">
                     Разработано профессиональной инди-командой со страстью к идеальному DX. Распространяется под свободной лицензией MPL-2.0.

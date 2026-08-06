@@ -80,7 +80,7 @@ function SupportComponent() {
               Помогите создать движок мечты
             </h3>
             
-            <p className="text-[#cac4d0] text-sm leading-relaxed max-w-xl">
+            <p className="text-[#cac4d0] text-m leading-relaxed max-w-xl">
               Разработка <span className="font-semibold text-white">Solas</span> : независимый шаг к созданию совершенных условий для геймдева. Мы пишем высокопроизводительный, полностью бесплатный движок на .NET 10.
             </p>
             <p className="text-[#cac4d0] text-m leading-relaxed max-w-xl">

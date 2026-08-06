@@ -4,7 +4,7 @@
  */
 
 import React, { memo } from 'react';
-import { Download, BookOpen, Cpu, Shield, RefreshCw } from 'lucide-react';
+import { Download, BookOpen, CodeXml, GitMerge, Gamepad2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import GameCard from './GameCard';
 import GameButton from './GameButton';
@@ -37,7 +37,6 @@ function HeroComponent({ onDocsClick, onDownloadClick, engineVersion }: HeroProp
           --shadow: var(--color-m3-primaryContainer);
         }
 
-        /* ЕДИНЫЙ БАЗОВЫЙ СЛОЙ ТЕКСТА (Одинаковый цвет и 3D-тень для всех слов) */
         .crystal-glow-text-base {
           position: relative;
           z-index: 1;
@@ -54,7 +53,6 @@ function HeroComponent({ onDocsClick, onDownloadClick, engineVersion }: HeroProp
             -4px 4px 0px var(--shadow);
         }
 
-        /* СЛОЙ БЛИКА */
         .crystal-glow-text-glare {
           position: absolute;
           inset: 0;
@@ -80,7 +78,6 @@ function HeroComponent({ onDocsClick, onDownloadClick, engineVersion }: HeroProp
           background-position: -60% 0%;
         }
 
-        /* ЗВЁЗДОЧКИ (SPARKLES) */
         .crystal-glow-container svg {
           position: absolute;
           z-index: 3;
@@ -201,7 +198,7 @@ function HeroComponent({ onDocsClick, onDownloadClick, engineVersion }: HeroProp
             <div>
               <div className="flex items-center justify-between gap-4 mb-6">
                 <div className="w-14 h-14 bg-m3-primaryContainer/60 rounded-2xl flex items-center justify-center text-m3-primary shadow-xl shadow-m3-primary/10">
-                  <Cpu className="w-7 h-7" />
+                  <CodeXml className="w-7 h-7" />
                 </div>
               </div>
 
@@ -236,7 +233,7 @@ function HeroComponent({ onDocsClick, onDownloadClick, engineVersion }: HeroProp
           <div className="flex flex-col h-full justify-between">
             <div>
               <div className="w-14 h-14 bg-m3-tertiaryContainer/60 rounded-2xl flex items-center justify-center text-m3-tertiary mb-5 shadow-xl shadow-m3-tertiary/10">
-                <Shield className="w-7 h-7" />
+                <GitMerge className="w-7 h-7" />
               </div>
               <h3 className="font-display font-bold text-2xl sm:text-3xl text-white mb-3">
                 Простые слияния в Git
@@ -261,7 +258,7 @@ function HeroComponent({ onDocsClick, onDownloadClick, engineVersion }: HeroProp
         >
           <div className="flex items-start gap-5">
             <div className="w-14 h-14 bg-m3-secondaryContainer/50 rounded-2xl flex items-center justify-center text-m3-secondary shrink-0 shadow-xl shadow-m3-secondary/10">
-              <RefreshCw className="w-7 h-7" />
+              <Gamepad2 className="w-7 h-7" />
             </div>
             <div>
               <div className="flex items-center gap-3 mb-3">
