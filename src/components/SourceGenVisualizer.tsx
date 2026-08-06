@@ -240,7 +240,7 @@ function SourceGenVisualizerComponent() {
           {/* LEFT PANEL: Interactive Controls & Theory (col-span-5) */}
           <div className="lg:col-span-5 space-y-6 flex flex-col justify-between">
             <div className="space-y-4">
-              <span className="text-[10px] font-mono font-bold tracking-widest text-m3-primary block uppercase">
+              <span className="text-[15px] text-center font-mono font-bold tracking-widest text-m3-primary block uppercase">
                 Сферы применения автогенерации
               </span>
 
@@ -254,7 +254,7 @@ function SourceGenVisualizerComponent() {
                       className={`p-4 rounded-2xl border-2 text-left transition-all ${
                         isActive
                           ? 'border-m3-primary bg-m3-primaryContainer/70 shadow-[0_4px_20px_rgba(208,188,255,0.15)] text-white'
-                          : 'border-white/5 bg-black/50 text-[#cac4d0] hover:bg-white/3'
+                          : 'border-white/5 bg-[#141218]/50 text-[#cac4d0] hover:bg-[#141218]/100 hover:border-m3-secondary/60'
                       } cursor-pointer`}
                     >
                       <div className="flex items-center gap-3">
@@ -281,10 +281,7 @@ function SourceGenVisualizerComponent() {
                   transition={{ duration: 0.3 }}
                   className="p-5 rounded-2xl m3-glass border-2 border-white/5 space-y-3.5"
                 >
-                  <h4 className="font-display font-bold text-base text-white flex items-center gap-2">
-                    {activeFeature.icon}
-                    <span>{activeFeature.title}</span>
-                  </h4>
+
                   <ul className="space-y-2.5">
                     {activeFeature.details.map((detail, idx) => (
                       <li key={idx} className="text-xs text-[#cac4d0] flex items-start gap-2.5 leading-relaxed">

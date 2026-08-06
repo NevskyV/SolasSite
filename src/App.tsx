@@ -99,9 +99,9 @@ export default function App() {
               
               {/* 1. HERO GREETING BANNER */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
               >
                 <Hero 
                   onDocsClick={handleDocsClick} 
@@ -114,10 +114,10 @@ export default function App() {
 
               {/* 2. DYNAMIC EDL RE-EVALUATION SANDBOX */}
               <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
               >
                 <EdlSandbox />
               </motion.div>
@@ -126,10 +126,10 @@ export default function App() {
 
               {/* 3. GRAPHS: INTUITIVE SPACE ISOLATION & DEPENDENCY INJECTS */}
               <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
               >
                 <SpaceHierarchy />
               </motion.div>
@@ -138,10 +138,10 @@ export default function App() {
 
               {/* 3.5. IMMERSIVE C# SOURCE GENERATION PIPELINE */}
               <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
               >
                 <SourceGenVisualizer />
               </motion.div>
@@ -150,10 +150,10 @@ export default function App() {
 
               {/* 4. SPRING ROADMAP MODULES PIPELINE */}
               <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
               >
                 <Roadmap />
               </motion.div>
@@ -162,10 +162,10 @@ export default function App() {
 
               {/* 5. PROJECT SUPPORT WITH DONATIONS & SOCIALS BLOB */}
               <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
               >
                 <Support />
               </motion.div>
