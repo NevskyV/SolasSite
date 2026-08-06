@@ -304,14 +304,6 @@ export default function App() {
                             <Copy className="w-4 h-4" />
                           </button>
                         </div>
-
-                      <button
-                        id="cancel-sdk-download-btn"
-                        onClick={() => setShowDownloadModal(false)}
-                        className="w-full py-2 text-slate-400 hover:text-white text-xs transition-all font-semibold cursor-pointer"
-                      >
-                        Отмена
-                      </button>
                     </>
                   )}
                 </div>

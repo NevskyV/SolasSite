@@ -143,7 +143,7 @@ export default function SourceGenVisualizer() {
         'Преобразует разрозненные абстрактные вызовы Update() в линейный плоский цикл.',
         'Исключает виртуальный оверхед и путем генерации Update Runners под конкретные типы.',
         'Умный генератор распараллеливает независимые сущности в Parallel на все ядра CPU.',
-        'Безумные 100,000+ активных сущностей со стабильными 240+ FPS.'
+        'Безумные 1,000,000+ активных сущностей со стабильными 500+ FPS.'
       ],
       sourceCode: `[Update(Parallel = true)]
 public partial class TextLogic : Logic, IInitializable
@@ -245,8 +245,8 @@ public partial class TextLogic : Logic, IInitializable
                       onClick={() => setActiveFeatureId(f.id)}
                       className={`p-4 rounded-2xl border-2 text-left transition-all ${
                         isActive
-                          ? 'border-m3-primary bg-m3-primaryContainer/10 shadow-[0_4px_20px_rgba(208,188,255,0.15)] text-white'
-                          : 'border-white/5 bg-black/20 text-[#cac4d0] hover:bg-white/3'
+                          ? 'border-m3-primary bg-m3-primaryContainer/70 shadow-[0_4px_20px_rgba(208,188,255,0.15)] text-white'
+                          : 'border-white/5 bg-black/50 text-[#cac4d0] hover:bg-white/3'
                       } cursor-pointer`}
                     >
                       <div className="flex items-center gap-3">
@@ -290,9 +290,9 @@ public partial class TextLogic : Logic, IInitializable
             </div>
 
             {/* Simulated compilation triggers */}
-            <div className="p-4 bg-white/2 rounded-2xl border-2 border-white/5 flex items-center justify-between gap-4 mt-4">
+            <div className="p-4 bg-black/40 rounded-2xl border-2 border-white/10 flex items-center justify-between gap-4 mt-4">
               <div className="flex-1">
-                <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 mb-1.5">
+                <div className="flex justify-between items-center text-[12px] font-mono text-slate-400 mb-1.5">
                   <span className={isCompiling ? "text-m3-primary animate-pulse" : "text-emerald-400"}>
                     {isCompiling ? `Сборка (${compileProgress}%)` : "Готов к генерации"}
                   </span>

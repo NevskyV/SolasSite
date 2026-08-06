@@ -351,14 +351,6 @@ export default function EdlSandbox() {
                   Кликайте по компонентам, чтобы динамически формировать состав и проверять реактивные изменения битовой маски.
                 </p>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-mono text-m3-tertiary flex items-center gap-1.5 bg-m3-tertiaryContainer/30 border-2 border-m3-tertiary/20 px-3 py-1.5 rounded-xl font-bold">
-                  <span className="w-2 h-2 rounded-full bg-m3-tertiary" /> Data (Структуры)
-                </span>
-                <span className="text-xs font-mono text-m3-primary flex items-center gap-1.5 bg-m3-primaryContainer/30 border-2 border-m3-primary/20 px-3 py-1.5 rounded-xl font-bold">
-                  <span className="w-2 h-2 rounded-full bg-m3-primary" /> Logic (Системы)
-                </span>
-              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -366,7 +358,7 @@ export default function EdlSandbox() {
               {/* Data Column */}
               <div className="space-y-3">
                 <span className="text-xs font-mono tracking-wider uppercase text-m3-tertiary font-bold block mb-2">
-                  Реактивные структуры данных (Data)
+                  Любые данные
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {EDL_COMPONENTS_POOL.filter(c => c.type === 'data').map(comp => {
@@ -396,8 +388,8 @@ export default function EdlSandbox() {
 
               {/* Logic Column */}
               <div className="space-y-3">
-                <span className="text-xs font-mono tracking-wider uppercase text-m3-primary font-bold block mb-2">
-                  Классы игровой логики (Logic)
+                <span className="text-xs font-mono justify-center tracking-wider uppercase text-m3-primary font-bold block mb-2">
+                  Игровая логика
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {EDL_COMPONENTS_POOL.filter(c => c.type === 'logic').map(comp => {

@@ -46,15 +46,180 @@ interface Shockwave {
   opacity: number;
 }
 
+/* =========================================================
+ * ASCII WAVES BACKGROUND COMPONENT (Originkit Adaptation)
+ * ========================================================= */
+function AsciiWaveCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const pointerRef = useRef({ x: -9999, y: -9999, active: false });
+
+  // Глобальное отслеживание курсора
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      pointerRef.current = {
+        x: e.clientX,
+        y: e.clientY,
+        active: true,
+      };
+    };
+    const onLeave = () => {
+      pointerRef.current.active = false;
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseleave', onLeave);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+
+  const [m3Color, setM3Color] = useState('rgba(208, 188, 255, 0.22)');
+
+  useEffect(() => {
+
+    const tempEl = document.createElement('div');
+    tempEl.style.color = 'var(--color-m3-primary)';
+    document.body.appendChild(tempEl);
+    const computedColor = getComputedStyle(tempEl).color;
+    document.body.removeChild(tempEl);
+
+    if (computedColor) {
+      const rgbaColor = computedColor.startsWith('rgb(')
+        ? computedColor.replace('rgb(', 'rgba(').replace(')', ', 0.3)')
+        : computedColor;
+      setM3Color(rgbaColor);
+    }
+  }, []);
+
+  // Рендер ASCII волн на Canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+
+    const handleResize = () => {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      const dpr = Math.min(2, typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1);
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.scale(dpr, dpr);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    // Пресеты Originkit
+    const characters = ' .:-+*=%@#';
+    const elementSize = 13;
+    const direction = 'top';
+    const fontWeight = '600';
+    const waveTension = 0.1;
+    const speedVal = 0.5;
+    const twistVal = 0.1;
+    const scaleVal = 0.09;
+    const intensityVal = 0.6;
+    const cursorForceVal = 1;
+    const interactionRadius = 140;
+
+    const driftMap: Record<string, [number, number]> = {
+      left: [1, 0],
+      right: [-1, 0],
+      top: [0, 1],
+      bottom: [0, -1],
+    };
+    const [driftX, driftY] = driftMap[direction] || [0, 1];
+    const driftRate = 1.5;
+
+    const noise = (x: number, y: number, t: number) => {
+      const a = Math.sin(x * 1.3 + t) * Math.cos(y * 1.1 - t * 0.7);
+      const b = Math.sin((x + y) * 0.7 + t * 0.5);
+      const c = Math.sin(x * 0.4 - y * 0.6 + t * 0.3);
+      return (a + b + c) / 3;
+    };
+
+    const rampArr = characters;
+    const rampMax = rampArr.length - 1;
+    const startTime = performance.now();
+
+
+
+    const draw = (now: number) => {
+      const cell = Math.max(4, elementSize);
+      const colStep = cell * 0.6;
+      const cols = Math.ceil(w / colStep) + 1;
+      const rows = Math.ceil(h / cell) + 1;
+
+      ctx.clearRect(0, 0, w, h);
+      ctx.font = `${fontWeight} ${cell}px ui-monospace, SFMono-Regular, Consolas, monospace`;
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = m3Color;
+
+      const t = ((now - startTime) / 1000) * speedVal;
+      const p = pointerRef.current;
+
+      for (let j = 0; j < rows; j++) {
+        for (let i = 0; i < cols; i++) {
+          const px = i * colStep;
+          const py = j * cell;
+          const ox = t * driftRate * driftX;
+          const oy = t * driftRate * driftY;
+          const nx = i * scaleVal + ox + Math.sin((j + t) * twistVal) * 2;
+          const ny = j * scaleVal + oy + Math.cos((i + t) * twistVal) * 2;
+
+          let v = noise(nx, ny, t * waveTension);
+
+          if (p.active) {
+            const dx = px - p.x;
+            const dy = py - p.y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < interactionRadius) {
+              const falloff = 1 - d / interactionRadius;
+              v += Math.sin(d * 0.08 - t * 4) * falloff * cursorForceVal;
+            }
+          }
+
+          const norm = Math.max(0, Math.min(1, (v * intensityVal + 1) / 2));
+          const ch = rampArr.charAt(Math.round(norm * rampMax));
+          if (ch !== ' ') ctx.fillText(ch, px, py);
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(draw);
+    };
+
+    animationFrameId = requestAnimationFrame(draw);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [m3Color]);
+
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden opacity-45 select-none">
+      <canvas ref={canvasRef} className="block w-full h-full" />
+    </div>
+  );
+}
+
+/* =========================================================
+ * MAIN MATERIAL BACKGROUND STAGE
+ * ========================================================= */
 export default function MaterialBackground({ activeTab }: { activeTab: 'landing' | 'docs' }) {
   const [shapes, setShapes] = useState<ShapeItem[]>([]);
   const [particles, setParticles] = useState<ExplosionParticle[]>([]);
   const [shockwaves, setShockwaves] = useState<Shockwave[]>([]);
 
-  // Позиция мыши на странице (для физики фигур) и на экране (для свечения)
   const mousePosRef = useRef({ vw: -100, vh: -100 });
-  const [cursorGlow, setCursorGlow] = useState({ x: 50, y: 50 });
-
   const nextIdRef = useRef(0);
   const generateId = () => `shape_${nextIdRef.current++}_${Date.now()}`;
 
@@ -63,13 +228,12 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
     'flower', 'cookie', 'clover', 'bun', 'pill', 'heart'
   ];
 
-  // Создание фигуры
   const createRandomShape = (isAggressive = false, borderSpawn = false): ShapeItem => {
     const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
     const depthRoll = Math.random();
     const depth: ShapeItem['depth'] = isAggressive ? 'front' : (depthRoll < 0.25 ? 'far' : depthRoll > 0.75 ? 'front' : 'mid');
     
-    const baseSize = isAggressive ? 45 + Math.random() * 15 : 40 + Math.random() * 10;
+    const baseSize = isAggressive ? 55 + Math.random() * 20 : 45 + Math.random() * 25;
     const size = depth === 'far' ? baseSize * 0.7 : depth === 'front' ? baseSize * 1.25 : baseSize;
 
     let x = Math.random() * 80 + 10;
@@ -114,7 +278,6 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
     };
   };
 
-  // Частицы и взрывная волна
   const triggerExplosion = (shape: ShapeItem) => {
     const shapeCenterX = shape.x + (shape.size / 2 / window.innerWidth) * 100;
     const shapeCenterY = shape.y + (shape.size / 2 / window.innerHeight) * 100;
@@ -155,33 +318,24 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
     setParticles(prev => [...prev, ...newParticles]);
   };
 
-  // Отслеживание курсора
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const vw = (e.clientX / window.innerWidth) * 100;
       const vh = ((e.clientY + window.scrollY) / window.innerHeight) * 100;
       mousePosRef.current = { vw, vh };
-
-      // Свечение привязано СТРОГО к экрану (0-100% viewport)
-      setCursorGlow({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Инициализация
   useEffect(() => {
     const initial: ShapeItem[] = [];
     for (let i = 0; i < 24; i++) initial.push(createRandomShape(false));
-    for (let i = 0; i < 8; i++) initial.push(createRandomShape(true)); // 8 красных фигур
+    for (let i = 0; i < 8; i++) initial.push(createRandomShape(true));
     setShapes(initial);
   }, []);
 
-  // Глобальный клик
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
@@ -222,7 +376,6 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
     return () => window.removeEventListener('click', handleGlobalClick);
   }, []);
 
-  // Физический цикл
   useEffect(() => {
     const interval = setInterval(() => {
       const mouse = mousePosRef.current;
@@ -234,7 +387,6 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
         active.forEach(shape => {
           if (shape.isEaten) return;
 
-          // 1. Физика силового поля мыши
           const dxMouse = shape.x - mouse.vw;
           const dyMouse = shape.y - mouse.vh;
           const distMouse = Math.hypot(dxMouse, dyMouse);
@@ -243,17 +395,15 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
           if (distMouse > 0 && distMouse < mouseRadius) {
             const forceRatio = ((mouseRadius - distMouse) / mouseRadius) * 0.007;
             if (!shape.isAggressive) {
-              shape.vx += (dxMouse / distMouse) * forceRatio;
-              shape.vy += (dyMouse / distMouse) * forceRatio;
+              shape.vx += (dxMouse / distMouse) * forceRatio * 1.5;
+              shape.vy += (dyMouse / distMouse) * forceRatio * 1.5;
             } else {
               shape.vx -= (dxMouse / distMouse) * forceRatio * 0.8;
               shape.vy -= (dyMouse / distMouse) * forceRatio * 0.8;
             }
           }
 
-          // 2. Взаимодействие фигур (Охота с ограничением радиуса)
           if (shape.isAggressive) {
-            // Разделение красных фигур
             active.forEach(other => {
               if (other.isAggressive && other.id !== shape.id && !other.isEaten) {
                 const rdx = shape.x - other.x;
@@ -267,9 +417,8 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
               }
             });
 
-            // Поиск близких нейтральных целей (не дальше 100vh)
             let closest: ShapeItem | null = null;
-            let minDist = 100; // Ограничение радиуса поиска
+            let minDist = 100;
 
             active.forEach(other => {
               if (!other.isAggressive && !other.isEaten) {
@@ -370,21 +519,10 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
 
   return (
     <>
-      {/* 1. ФИКСИРОВАННЫЙ ЭКРАННЫЙ СЛОЙ СВЕЧЕНИЯ (Преследует мышь ровно 1 к 1) */}
-      <div className="fixed inset-0 z-0 select-none overflow-hidden opacity-35 pointer-events-none">
-        <div
-          className="absolute w-[550px] aspect-square rounded-full bg-m3-primary/25 blur-[120px] transition-all duration-300 ease-out"
-          style={{
-            left: `${cursorGlow.x}%`,
-            top: `${cursorGlow.y}%`,
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-        <div className="absolute top-[-10%] right-[-10%] w-[600px] aspect-square rounded-full bg-m3-primary/15 blur-[130px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[700px] aspect-square rounded-full bg-m3-tertiary/10 blur-[140px]" />
-      </div>
+      {/* 1. ФИНАЛЬНЫЙ ASCII-ВОЛНОВОЙ ФОН */}
+      <AsciiWaveCanvas />
 
-      {/* 2. СЛОЙ ФИГУР (По всей длине 450vh) */}
+      {/* 2. ИНТЕРАКТИВНЫЙ СЛОЙ С ФИГУРАМИ */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" id="material-expressive-canvas">
         <div className="absolute inset-0 z-0 w-full h-full select-none">
           {shapes.map((shape) => {
@@ -430,7 +568,7 @@ export default function MaterialBackground({ activeTab }: { activeTab: 'landing'
                     d={pathD}
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth={shape.isAggressive ? '3' : '2.5'}
+                    strokeWidth={shape.isAggressive ? '4' : '2.5'}
                     className={shape.borderColorClass}
                     strokeLinecap="round"
                     strokeLinejoin="round"
